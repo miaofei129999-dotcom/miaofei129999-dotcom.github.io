@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>815 Appliance Pages, Two Error-Code Lists: A Coverage Ledger</title>
+<meta name="description" content="We parsed all 815 brand-and-appliance index pages on our own site. 8,450 model records, 3,800 part numbers, two confirmed error-code lists.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 8 November 2026</p>
+<h1>815 Appliance Pages, Two Error-Code Lists: A Coverage Ledger</h1>
+<p>A reference page, not an essay. This is the coverage count for our appliance database, published because the numbers are worse than our own marketing implies.</p>
+<h2>Why this page exists</h2>
+<p>A reader asked for a Maytag dryer fault code and got a page about twelve washing machines, one of which had a code list. Neither matched. We counted the whole catalogue afterwards to find out how often that happens.</p>
+<h2>Method</h2>
+<p>Read <code>sitemap-models.xml</code> (4,800 URLs), kept the 817 brand × appliance index pages, parsed the self-tally each page prints — models documented, replacement part numbers, models with a confirmed error-code list. One curl request per page through a proxy, regex parse, 8 November 2026.</p>
+<p>815 of 817 parsed. Two excluded rather than estimated.</p>
+<h2>Numbers</h2>
+<table><thead><tr><th>Measure</th><th>Value</th></tr></thead><tbody><tr><td>Index pages</td><td>815</td></tr><tr><td>Brands</td><td>503</td></tr><tr><td>Categories</td><td>9</td></tr><tr><td>Model records</td><td>8,450</td></tr><tr><td>Replacement part numbers</td><td>3,800</td></tr><tr><td>Pages carrying any part number</td><td>57 (7.0%)</td></tr><tr><td>Models on pages with no part numbers</td><td>6,369</td></tr><tr><td>Pages with a confirmed error-code list</td><td>2 (0.25%)</td></tr><tr><td>Pages with exactly one model</td><td>229 (28.1%)</td></tr><tr><td>Median models per page</td><td>3</td></tr></tbody></table>
+<p>Category breakdown, part numbers only: refrigerators 1,570 · washing machines 664 · dishwashers 597 · dryers 476 · freezers 225 · room AC 157 · range hoods 62 · dehumidifiers 49 · air purifiers 0.</p>
+<h2>Read it this way</h2>
+<p>Two error-code pages in 815 is not a coverage gap. It is a missing feature with a title tag in front of it.</p>
+<p>The parts column is real in one category and decorative in the others. Refrigerators carry 41% of all part numbers on 30.6% of pages. Air purifiers carry none on 66 pages.</p>
+<p>Six thousand three hundred and sixty-nine models have no part number anywhere on their category page.</p>
+<h2>Not measured</h2>
+<p>Model-level pages (3,672 of them) were not crawled, so a dash here may not reflect the model page itself.</p>
+<p>Part numbers were not checked against manufacturer catalogues. Presence only.</p>
+<p>Brand-to-model ratios across 503 brands were not investigated.</p>
+<h2>Corrections</h2>
+<p>The parts copy said "part numbers with the symptom each fixes". No symptom data exists. Removing it.</p>
+<p>An internal note said "8,450 appliances with manuals". 8,450 is model records; manual links were not counted.</p>
+<h2>Disclosure</h2>
+<p>This ledger covers <a href="https://modelnumberfinder.com/">ModelNumberFinder</a>, which we operate. Method above, misses above. No sponsor, no manufacturer preview.</p>
+<h2>Unresolved</h2>
+<p>Washers before dryers, because the 44 washing-machine pages already have 664 part numbers to hang codes on. The mail is all dryers.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 8 November 2026.</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>157 Empty NCAP Pages: A Vehicle Safety Coverage Ledger</title>
+<meta name="description" content="Of 162 car safety pages we opened, 157 said NHTSA never returned a record. Three had ratings, all Honda. The crawl and the numbers.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 8 November 2026</p>
+<h1>157 Empty NCAP Pages: A Vehicle Safety Coverage Ledger</h1>
+<p>Status page for our car spec database. Current state: the safety layer is broken for most non-Honda vehicles, and the maintenance layer is empty by design.</p>
+<h2>Why this page exists</h2>
+<p>A reader pointed out that the safety page for a 2020 Toyota Camry claims NHTSA never tested the vehicle. NHTSA rated it five stars. We crawled 162 pages to see how far the problem goes.</p>
+<h2>Method</h2>
+<p>94 brand sitemaps from <code>carspecdata.com/sitemap.xml</code> → 2,792 URLs of the form <code>/&lt;brand&gt;/&lt;model&gt;/&lt;4 digits&gt;</code>. Two excluded (<code>/ram/1500</code>, <code>/saab/9000</code> — model names, not years). Stratified sample of three model-years per brand: 170 pages, 61 brands. <code>/maintenance</code> on all 170, <code>/safety</code> on 162. curl via proxy, text parse, 8 November 2026.</p>
+<h2>Numbers</h2>
+<table><thead><tr><th>Check</th><th>n</th><th>Result</th></tr></thead><tbody><tr><td>Maintenance fields (fluids, torque, intervals)</td><td>170 pages / 1,008 fields</td><td>0 filled — every field "Not yet verified"</td></tr><tr><td>Safety pages with NCAP record</td><td>162</td><td>3 rated (1.9%), 157 no record, 2 load failures</td></tr><tr><td>Rated pages, by make</td><td>3</td><td>Honda ×3 (2017 Accord, 2026 Passport, 2010 Civic)</td></tr><tr><td>Spot checks outside sample</td><td>4</td><td>2020 Camry · Elantra · Model 3 = no record · CR-V = rated</td></tr></tbody></table>
+<h2>Read it this way</h2>
+<p>The blank maintenance table is intentional. Fluid capacities and torque live in paid service information, and we don't publish a number we can't trace. A wrong torque spec destroys an engine; an empty cell costs a visit to the dealer.</p>
+<p>The blank safety table is not intentional. It is broken, and it is broken in a way that correlates with the manufacturer rather than the model year — median year on failing pages was 2021, while the three working pages were 2017, 2026 and 2010.</p>
+<p>The explanatory copy on those 157 pages blames model-year age and low production volume. That copy is ours, and it is false for at least three of the vehicles we opened.</p>
+<h2>Not measured</h2>
+<p>The importer was not inspected; the cause below the symptom is unconfirmed.</p>
+<p>162 of 2,792 pages checked. 61 brands.</p>
+<p>No baseline for NHTSA's own NCAP coverage, 2018–2025. The 157 cannot yet be split into our-misses and never-rated.</p>
+<h2>Corrections</h2>
+<ul><li>"Older model years / low volume" explanatory text: withdrawn. Replaced with a plain statement that no record matched.</li><li>Claim that every model year carries a star rating: withdrawn. 3 of 162 in this sample carry one.</li></ul>
+<h2>Disclosure</h2>
+<p>Ledger for <a href="https://carspecdata.com/">CarSpecData</a>, which we operate. Published because a broken page and an empty page must not look the same to a visitor. No sponsor, no manufacturer preview.</p>
+<h2>Unresolved</h2>
+<p>Root cause in the importer. Next step is a per-make count of matched versus unmatched VIN patterns — which will tell us whether this is one nameplate or hundreds.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 8 November 2026.</footer>
+</div>
+</body>
+</html>

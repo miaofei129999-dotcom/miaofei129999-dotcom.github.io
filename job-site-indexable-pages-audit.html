@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>14 Indexable Pages, Zero Job Postings</title>
+<meta name="description" content="Every page in our job site's sitemap, fetched and parsed: 14 URLs, 14,891 words, no JobPosting node anywhere, and /job/1 returning 404.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 9 November 2026</p>
+<h1>14 Indexable Pages, Zero Job Postings</h1>
+<p>Before the audit: we thought this site had a rendering problem. After the audit: it has 14 pages, and none of them is a job.</p>
+<p>That matters more than it sounds. A job aggregator lives or dies on whether a specific opening can be found by a specific person on a specific day. Ours can't be found at all, because no opening has an address.</p>
+<h2>How this was measured</h2>
+<p>The sitemap lists 14 URLs. We pulled every one with curl through a single proxy on 9 November 2026 and counted what a crawler would see: visible words after stripping scripts and styles, JSON-LD <code>@type</code> values, and raw occurrences of the string "JobPosting".</p>
+<p>Then four route probes and a read of <code>robots.txt</code> and <code>llms.txt</code>.</p>
+<h2>Page by page</h2>
+<table><thead><tr><th>Page</th><th>Words</th><th>Structured data</th><th>JobPosting</th></tr></thead><tbody><tr><td><code>/</code></td><td>427</td><td>WebSite, Organization</td><td>0</td></tr><tr><td><code>/pricing</code></td><td>4</td><td>Answer, FAQPage, Question</td><td>0</td></tr><tr><td><code>/about</code></td><td>447</td><td>AboutPage, Organization, FAQPage, Question</td><td>0</td></tr><tr><td><code>/contact</code></td><td>227</td><td>none</td><td>0</td></tr><tr><td><code>/privacy</code></td><td>1,452</td><td>none</td><td>0</td></tr><tr><td><code>/terms</code></td><td>1,489</td><td>none</td><td>0</td></tr><tr><td><code>/guide/</code></td><td>169</td><td>Article, CollectionPage, WebSite</td><td>0</td></tr><tr><td><code>/guide/h1b-sponsorship-jobs/</code></td><td>1,349</td><td>Article, FAQPage, Question</td><td>0</td></tr><tr><td><code>/guide/recently-posted-jobs/</code></td><td>1,032</td><td>Article, FAQPage, Question</td><td>0</td></tr><tr><td><code>/guide/how-many-jobs-should-i-apply-to/</code></td><td>1,443</td><td>Article, FAQPage, Question</td><td>0</td></tr><tr><td><code>/guide/best-job-aggregator-sites/</code></td><td>1,048</td><td>Article, FAQPage, Question</td><td>0</td></tr><tr><td><code>/guide/how-long-do-job-postings-stay-up/</code></td><td>1,795</td><td>Article, FAQPage, Question</td><td>0</td></tr><tr><td><code>/guide/new-grad-jobs-2027/</code></td><td>1,142</td><td>Article, FAQPage, Question</td><td>0</td></tr><tr><td><code>/guide/limits/</code></td><td>2,867</td><td>Article, FAQPage, Question</td><td>0</td></tr></tbody></table>
+<h2>Three findings</h2>
+<p><strong>Not one JobPosting node, on a job site.</strong> Fourteen pages, zero. Nine carry Question and FAQPage markup. The guides are aimed at queries like H1B sponsorship and new-grad hiring in 2027 — precisely the queries where a search engine would rather return a listing than an essay.</p>
+<p><strong>There is no address to index.</strong> <code>/job/1</code> returns 404. <code>/search</code> returns 404. <code>/jobs</code> returns 307. Postings are read from company boards at request time and served behind <code>/api/</code>, which <code>robots.txt</code> disallows. So the crawl ends at page 14, every time.</p>
+<p><strong><code>/pricing</code> is a four-word page.</strong> It's listed in the sitemap at priority 0.8 with a monthly change frequency. The server-rendered HTML carries 4 words and no links, plus FAQPage markup describing a Q&amp;A block that isn't present. Someone deciding whether to sign in gets what a crawler gets: almost nothing.</p>
+<h2>What we can't say</h2>
+<p>We didn't log in, so the number of live postings behind the API is unknown to us. "Zero indexable jobs" is the claim; "zero jobs" would be a lie.</p>
+<p>We didn't check Search Console, so we don't know how these 14 pages are actually treated, or whether the guides pull any traffic at all.</p>
+<p>And we have no conversion data from guide to signup.</p>
+<h2>A correction</h2>
+<p>An earlier note of ours blamed client-side rendering. That was wrong — the guide pages are plain server-rendered HTML, one to nearly three thousand words, fully readable with JavaScript disabled. The problem was never paint. It was that nobody had built the URL.</p>
+<h2>Disclosure</h2>
+<p>This audit covers <a href="https://jobradarly.com/">jobradarly.com</a>, a site of ours. We publish it because the visible product is finished and the crawlable surface is nearly empty, and those two things can coexist for months without anyone noticing.</p>
+<hr>
+<p>A schema tag is not the fix. A page is the fix: one posting, one URL, a date it was first seen, the company, the city, canonical back to the employer's board. The markup can follow.</p>
+<p>The awkward part is what that does to freshness. A page that survives the posting is a page that lies, and this product exists to avoid exactly that.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 9 November 2026.</footer>
+</div>
+</body>
+</html>

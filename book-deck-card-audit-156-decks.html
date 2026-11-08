@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>156 Decks, 34,500 Cards, One Answer Length</title>
+<meta name="description" content="We crawled all 156 public book decks on our own flashcard site: 34,500 cards, 2.7 million answer words, a flat sixty-word answer length, and zero quiz markup.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 9 November 2026</p>
+<h1>156 Decks, 34,500 Cards, One Answer Length</h1>
+<p>We publish book flashcards. Small product, one page per book, no app for the reading part. The question we kept avoiding was how good the coverage actually is, so on 9 November we crawled our own catalogue and counted.</p>
+<p>156 decks. 34,500 question-and-answer pairs. 2.7 million words of answers.</p>
+<p>The totals are not the interesting part. The flatness is.</p>
+<h2>How the count was taken</h2>
+<p>The sitemap lists 191 URLs. 35 of them are blog posts and marketing pages, which leaves 156 decks under <code>/book-cards/</code>.</p>
+<p>curl, six workers, one proxy, 45 seconds per page, ordinary Chrome user agent. Questions come from the <code>bc-qa-q</code> class, answers from <code>bc-qa-a</code>, chapter labels from <code>bc-ch-name</code>. Word counts run on stripped answer text. Structured data was pulled from every <code>ld+json</code> block on the page.</p>
+<p>Library pages, all of them, nothing sampled.</p>
+<h2>The table</h2>
+<table><thead><tr><th>Measure</th><th>Value</th></tr></thead><tbody><tr><td>Deck pages</td><td>156</td></tr><tr><td>Q&amp;A pairs</td><td>34,500</td></tr><tr><td>Answer words</td><td>2,729,190</td></tr><tr><td>Median deck size</td><td>123 cards</td></tr><tr><td>Largest deck</td><td>531 cards, 146 chapters</td></tr><tr><td>Smallest deck</td><td>24 cards, 13 chapters</td></tr><tr><td>Median cards per chapter</td><td>3.75</td></tr><tr><td>Average answer length</td><td>59.9 words</td></tr><tr><td>Shortest / longest answer</td><td>25 / 109 words</td></tr><tr><td>Median page size</td><td>227 KB</td></tr><tr><td>Largest page size</td><td>613 KB</td></tr></tbody></table>
+<h2>Three things that surprised us</h2>
+<p><strong>Deck size follows chapter count, not difficulty.</strong> 3.75 cards per chapter on the median, 4.00 at the top, and no deck above it. Livy gets 531 cards because he wrote 146 chapters. The Art of War gets 24 because Sun Tzu is short. If you pick a deck by card count, you're picking by book length and calling it depth.</p>
+<p><strong>Answers do not vary in length.</strong> 59.9 words averaged across decks. 84 decks contain no answer shorter than 40 words. Three decks keep every answer under 65. A deck is supposed to have quick cards and heavy cards. Ours runs at one speed.</p>
+<p><strong>No deck is marked up as a quiz.</strong> 156 out of 156 carry <code>Book</code> + <code>WebPage</code> + <code>BreadcrumbList</code> + <code>Person</code>. None carry <code>Quiz</code>, <code>Question</code> or <code>FAQPage</code>. Meanwhile 25 of the 35 non-deck pages do carry Question markup. The pages people study from are typed as book pages; the pages written to sell the product are typed as Q&amp;A.</p>
+<h2>The edge of what we know</h2>
+<p>We did not run the generator. No upload, no account, so we can't say whether the flat length comes from the prompt or from a later editing pass. We also did not check the cards against the source books — that's 156 books, we read one.</p>
+<p>And we have no data on how far into a deck anyone gets.</p>
+<h2>One correction</h2>
+<p>An internal note recorded "191 decks". That number is the sitemap. Decks are 156.</p>
+<p>Our first crawl also flagged The Republic as failing. It timed out at 45 seconds on 289 KB of HTML and returned 200 twice afterwards. The page is fine; the cutoff was too tight.</p>
+<h2>Disclosure</h2>
+<p>This crawl is of our own product, <a href="https://wakecards.com/">wakecards.com</a>. We publish it because a coverage figure a visitor can't reproduce is just a claim, and the raw table is more useful than a summary of it.</p>
+<hr>
+<p>Seven decks are under 50 cards and 41 are under 100. A short deck you finish beats a long deck you abandon, and we don't yet know which kind we've built.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 9 November 2026.</footer>
+</div>
+</body>
+</html>

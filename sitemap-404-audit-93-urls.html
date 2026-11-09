@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Sitemap Lists 93 Pages. The Server Answers 65.</title>
+<meta name="description" content="All 93 URLs in our Chinese zodiac site's sitemap, fetched sequentially: 28 return 404, including the /elements hub and all five element pages.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 10 November 2026</p>
+<h1>The Sitemap Lists 93 Pages. The Server Answers 65.</h1>
+<p>A sitemap is a promise about what exists. Ours currently promises 93 URLs and delivers 65. The other 28 come back 404, and the sixth entry in the file is the hub page for the section the domain is named after.</p>
+<h2>The ledger</h2>
+<table><thead><tr><th>Section</th><th>Listed</th><th>200</th><th>404</th></tr></thead><tbody><tr><td><code>/elements</code> + five element pages</td><td>6</td><td>0</td><td>6</td></tr><tr><td><code>/elements/YYYY</code> 1982–2006</td><td>23</td><td>4</td><td>19</td></tr><tr><td><code>/YYYY-chinese-zodiac-element</code></td><td>8</td><td>8</td><td>0</td></tr><tr><td>Guides and utility</td><td>55</td><td>52</td><td>3</td></tr><tr><td>Homepage</td><td>1</td><td>1</td><td>0</td></tr><tr><td><strong>Total</strong></td><td><strong>93</strong></td><td><strong>65</strong></td><td><strong>28</strong></td></tr></tbody></table>
+<h2>How it was counted</h2>
+<p>Pulled <code>/sitemap.xml</code>, took the <code>&lt;loc&gt;</code> list as given, curled every entry with <code>-L</code> and a local proxy, single-threaded, 300 ms spacing. Non-200 responses got a retry; timeouts got a second retry. Date of the run: 10 November 2026, just after midnight in Luoyang. curl 8 for the fetching, Python 3.13 for the counting.</p>
+<p>Single-threaded because the first attempt used eight threads and produced errors I couldn't classify. Slowing down made the 404s stay 404 and the timeouts disappear, which was the information I actually needed.</p>
+<h2>Three findings</h2>
+<p><strong>The section the domain sells is gone, and something else replaced it.</strong></p>
+<p><code>/elements/wood</code> through <code>/elements/water</code>: five 404s. <code>/elements</code>: 404.</p>
+<p>The element pages exist. They moved to <code>/wood-element-personality</code> and its four siblings, which all return 200 with proper Article and FAQ markup. So the content survived a route change and the sitemap generator didn't.</p>
+<p>Four years close to the front of the book — 1982 to 1985 — still work under <code>/elements/</code> because they 301 to the root-level year pages. The other nineteen years under that path are dead. A redirect table that covers four of twenty-three entries is the clearest sign that this was migrated by hand.</p>
+<p><strong>No human can reach the dead pages, which is why nobody reported them.</strong></p>
+<p>The homepage carries 27 internal links across 15 unique paths. None of them points at <code>/elements</code>.</p>
+<p>So navigation moved and the sitemap didn't. Visitors get the new URLs, see a working site, and leave happy. The one reader that follows the old list is the crawler, and it's the only reader the file was ever for.</p>
+<p><strong>The file is six days old, so this isn't rot.</strong></p>
+<p>Newest <code>lastmod</code> in the sitemap: 4 November 2026. Freshly built, already wrong by 30%.</p>
+<p>If a generator asked the running app for its routes, it couldn't produce that. It's reading a manifest — a list of pages someone intended to ship.</p>
+<h2>Two gaps that aren't bugs</h2>
+<table><thead><tr><th>Item</th><th>Live</th><th>Possible</th></tr></thead><tbody><tr><td>Zodiac pair compatibility pages</td><td>18</td><td>66</td></tr><tr><td>Day-master pages</td><td>6</td><td>10</td></tr></tbody></table>
+<p>Compatibility pages also ship under two URL conventions — eleven suffixed <code>-compatibility</code>, seven bare — and their canonical tags disagree about which form is correct. <code>/rat-and-ox-compatibility</code> redirects to the short one. <code>/snake-and-pig</code> redirects to the long one.</p>
+<p>Four of the ten heavenly stems have no day-master page: <code>geng</code>, <code>xin</code>, <code>ren</code>, <code>gui</code>.</p>
+<h2>What I could not verify</h2>
+<p>Whether any of the readings are correct.</p>
+<p>Status codes prove pages exist. They don't prove the element assigned to a birth date matches a classical chart. That requires pushing real dates through the calculator and diffing against a reference table, and this pass didn't do it.</p>
+<p>I also can't say when each URL started 404ing, or whether Google has already dropped them. Access logs and Search Console would answer both. I had neither.</p>
+<p>Whether the <code>/elements</code> section was pruned deliberately is unknown to me too. From outside, an abandoned migration and an intentional deletion look identical.</p>
+<h2>One section that holds up</h2>
+<p>Eight live year pages, eight correct sexagenary labels. Stem <code>(year − 4) mod 10</code>, branch <code>(year − 4) mod 12</code> — 1980 Metal Monkey, 1984 Wood Rat, 1990 Metal Horse, 1991 Metal Goat, no mismatches.</p>
+<p>The 1984 page also gets the calendar seam right: Chinese New Year on 2 February, Li Chun two days later, and the page explains which system it's using instead of blurring them.</p>
+<h2>A correction to our own bookkeeping</h2>
+<p>The site ledger dated 7 November notes "sitemap 18/18 all 200" and calls the crawl entry points intact.</p>
+<p>Eighteen sitemap files answered 200. None of their contents were opened. Here the index is flawless and a third of what it indexes is missing.</p>
+<p>The line has been corrected. Checking an index is not checking the pages it points to.</p>
+<p>Disclosure: this is our own domain — <a href="https://chinesezodiacelement.com/">chinesezodiacelement.com</a>. Six of the twenty-eight dead URLs are the hub and its five children, and those are the ones that should be restored this week. The rest have been broken since at least 4 November; another seven days of being broken will not change what's wrong with them.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 10 November 2026.</footer>
+</div>
+</body>
+</html>

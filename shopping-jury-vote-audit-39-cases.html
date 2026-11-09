@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>46 Votes Across 39 Trials: A Ledger of a Jury That Never Convened</title>
+<meta name="description" content="We pulled every case from our own shopping-vote site's API: 39 cases, 46 votes, a ceiling of three votes per case, and 22 cases that never got one.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 10 November 2026</p>
+<h1>46 Votes Across 39 Trials: A Ledger of a Jury That Never Convened</h1>
+<p>The newest case on our own voting site is seventeen days old. It's a $99.99 Minecraft creeper mini fridge, posted by someone who admits he blacked out at Target, and it has zero votes.</p>
+<p>I only found that out by reading the API instead of the page.</p>
+<h2>Why the page would have lied to me</h2>
+<p>The site is a single page app. Fetch the homepage and you get 98 KB of shell, a canonical tag, and no cases at all. Everything is rendered after JavaScript runs, which means every count I might have quoted from the screen would have been a count of what my browser felt like showing.</p>
+<p>So I used the endpoint the app itself uses: <code>/api/list?sort=new&amp;limit=200&amp;offset=0</code>. One call, 9 November 2026 at 16:01 UTC. <code>next</code> came back null, so 39 is everything.</p>
+<p>Tools: curl with a local proxy, then Python to group and count. Nothing clever.</p>
+<h2>The ledger</h2>
+<table><thead><tr><th>Measure</th><th>Value</th></tr></thead><tbody><tr><td>Cases</td><td>39</td></tr><tr><td>Guilty votes</td><td>33</td></tr><tr><td>Not-guilty votes</td><td>13</td></tr><tr><td>Cases with zero votes</td><td>22</td></tr><tr><td>Cases with three votes</td><td>12</td></tr><tr><td>Highest vote count on a single case</td><td>3</td></tr><tr><td>Replies</td><td>51</td></tr><tr><td>Median defence length</td><td>52 words</td></tr><tr><td>Median price</td><td>455 USD</td></tr><tr><td>Cases created 15–23 Oct 2026</td><td>39</td></tr><tr><td>Median gap between cases</td><td>0.06 s</td></tr></tbody></table>
+<h2>Three readings</h2>
+<p><strong>The verdict exists before the vote.</strong></p>
+<p>36 of 39 cases were posted with an AI lean attached. 33 lean guilty. On the 17 cases that received at least one human vote, the humans agreed with the machine 16 times, and tied once — a Steam Deck at 1–1.</p>
+<p>I built that to stop empty cases from looking empty. What it also did was make the crowd's verdict indistinguishable from the label it was handed.</p>
+<p><strong>Three is a ceiling, not a peak.</strong></p>
+<p>Twelve cases sit at exactly three votes. None sits above. Twenty-two sit at zero.</p>
+<p>If the voting flow retires a case after a couple of guilty votes, that's the explanation, and it means the number of votes is a measure of the UI, not of interest.</p>
+<p><strong>The table was filled by a script.</strong></p>
+<p>39 cases inside 8 days and 4 hours, arriving in 13 bursts, median 58 milliseconds apart. Then nothing for 17 days. That's a loader, not a crowd. Saying so costs me the nicer story and saves me from quoting 39 as growth.</p>
+<h2>Where the numbers run out</h2>
+<p>No voter ids, no vote timestamps. 46 votes could be 46 people or one person with a lot of free time. I can't split those cases and won't invent a split.</p>
+<p>No reply author field either, so the 51 replies are an unattributed block of text. They may be the crowd. They may be me.</p>
+<p>I also didn't touch the paid reading, so this says nothing about conversion.</p>
+<p>One more finding, unrelated to votes: <code>/cases/&lt;id&gt;</code> is a 404. All 39 ids. <code>/cases</code> serves the homepage HTML byte for byte with a canonical pointing home. The sitemap holds four URLs and none of them is a case. Thirty-nine records, zero pages.</p>
+<p>Disclosure: the site is <a href="https://walletjury.com/">walletjury.com</a>, run by this account. The data is ours, which makes it convenient and slightly suspect — it is also the only database that holds these votes.</p>
+<p>If a fortieth case shows up, the experiment is still running. If the ledger is still 39 in December, it already ended and nobody told the fridge.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 10 November 2026.</footer>
+</div>
+</body>
+</html>

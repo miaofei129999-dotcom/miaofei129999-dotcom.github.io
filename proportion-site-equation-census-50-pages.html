@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A Census of One Calculator Site: 50 Pages, 30 Equations, 14 Ideas</title>
+<meta name="description" content="Fifty pages of our own proportion calculator, crawled one at a time: 30 worked equations, 14 distinct, one of them used 13 times, and 40 pages with no equation at all.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 11 November 2026</p>
+<h1>A Census of One Calculator Site: 50 Pages, 30 Equations, 14 Ideas</h1>
+<p>Fifty pages. Thirty worked equations. Fourteen distinct equations. One of them used thirteen times.</p>
+<p>That is the whole teaching surface of a site that gets built to answer questions about proportions, and it is the number I did not want.</p>
+<p>Everything below comes from a single crawl, not from opinions about our own writing.</p>
+<h2>Method</h2>
+<p><code>sitemap.xml</code> gave fifty URLs. Sequential curl through a proxy, 300 ms between requests, because the server behind this shares a 1 vCPU box with seventeen other sites and does not enjoy company.</p>
+<p>Four requests timed out first time. Four answered 200 on the next try. So: fifty live pages, four slow starts, zero dead links. If we had trusted the first pass we would now be maintaining a phantom outage report.</p>
+<p>Text was extracted by stripping <code>&lt;script&gt;</code>, <code>&lt;style&gt;</code> and tags. Equations by regex on <code>a/b = x/c</code>. Similarity by five-word shingles and Jaccard. No browser involved, which matters later.</p>
+<h2>The table</h2>
+<table><thead><tr><th>Measure</th><th>Value</th></tr></thead><tbody><tr><td>URLs in sitemap</td><td>50</td></tr><tr><td>Pages with extractable text</td><td>50</td></tr><tr><td>Proportion equations</td><td>30</td></tr><tr><td>Distinct equations</td><td>14</td></tr><tr><td><code>3/4 = x/20</code></td><td>13 (43%)</td></tr><tr><td>Pages with no equation</td><td>40</td></tr><tr><td>Median word count</td><td>1,124</td></tr><tr><td>Pages at 1,000+ words</td><td>39</td></tr></tbody></table>
+<p>Where the equations live:</p>
+<table><thead><tr><th>Page</th><th>Count</th></tr></thead><tbody><tr><td>proportions-with-decimals</td><td>6</td></tr><tr><td>how-to-cross-multiply</td><td>6</td></tr><tr><td>proportion-formula</td><td>4</td></tr><tr><td>how-to-solve-proportions</td><td>4</td></tr><tr><td>homepage</td><td>3</td></tr><tr><td>proportion-word-problems</td><td>2</td></tr></tbody></table>
+<p>Six pages hold twenty-five of thirty. The remaining forty-four share five.</p>
+<h2>Three findings</h2>
+<p><strong>The duplicate-page worry was wasted effort.</strong> Six posts with near-identical titles about solving for x in a fraction. 528 pairwise comparisons, highest Jaccard 5.5%, nothing above 30%. They are separate articles. The overlap problem is not text, it is that all roads lead to <code>3/4 = x/20</code>.</p>
+<p><strong>Length is not the missing thing.</strong> Pages with no equation: 1,068 words on average. Pages with one: 1,115. Four percent. The prose exists at full length; the arithmetic was simply never added.</p>
+<p><strong>Concentration beats coverage.</strong> Our decimals page breaks the pattern with six different equations, and it is the only page that reads like someone sat down with the numbers. Same template. Different care.</p>
+<h2>What this crawl cannot see</h2>
+<p>The calculator itself. Every page ships no <code>type="number"</code> field and one <code>&lt;svg&gt;</code>; the tool is built in JavaScript after load, so a text crawl gets a shell. Fraction input behaviour, rounding, the mobile layout of the steps panel — all untested here. This is an audit of prose only.</p>
+<p>And a correction we owe ourselves: our first automated check flagged six wrong answers on our own pages. Every one was the regex reading an intermediate step as a final result. We nearly published it. The checker was the broken thing.</p>
+<h2>Disclosure</h2>
+<p>We own proportioncalculatoronline.com, which is why the sitemap was available and why nobody rate-limited us.</p>
+<p>Guide index, including the decimals page that does this properly: <a href="https://proportioncalculatoronline.com/">proportion calculator</a>.</p>
+<p>##</p>
+<p>Forty pages need equations, not paragraphs. The model for all forty already exists on page nine of the crawl.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 11 November 2026.</footer>
+</div>
+</body>
+</html>

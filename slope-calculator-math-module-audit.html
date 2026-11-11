@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>67 Inputs, 0 Wrong Answers: Auditing Our Own Slope Calculator</title>
+<meta name="description" content="We imported our own slope calculator's 264-line math module in Node and fed it 67 inputs, including mixed numbers and a 1e-7 delta. Every number matched. Two display labels did not.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 11 November 2026</p>
+<h1>67 Inputs, 0 Wrong Answers: Auditing Our Own Slope Calculator</h1>
+<p>Our slope calculator has three input modes now — two points, an equation, a rise/run pair. The third went in on 7 November.</p>
+<p>Nobody tested the fraction parser that day. So I pulled our own <code>math.mjs</code> out of the site, 264 lines of exact rational arithmetic, and imported it in Node.</p>
+<p>Sixty-seven inputs. Fifty-nine numbers back. Every one matched an independent Python recomputation. Zero arithmetic errors, two display problems.</p>
+<h2>Method</h2>
+<p>The calculator page loads <code>app.mjs</code>, which imports <code>math.mjs</code>. That file is pure: no DOM, no canvas, no side effects. It goes into Node 22 with a single import statement, which means the maths can be tested from a terminal instead of by clicking.</p>
+<pre><code>import { slopeFromPoints, slopeFromEquation, slopeFromRiseRun } from './math.mjs';</code></pre>
+<p>Inputs, chosen to be unkind:</p>
+<ul><li>24 point pairs — negative coordinates, both-negative, <code>.5</code>, <code>5.</code>, equal x, identical points</li><li>14 proportion setups — one blank cell each, including a zero denominator</li><li>17 raw strings — <code>3/4</code>, <code>1 1/2</code>, <code>3/-4</code>, <code>-3/-4</code>, <code>1e3</code>, <code>1/0</code>, thirty-three characters</li><li>6 <code>Ax + By = C</code> triples</li><li>6 rise/run pairs</li></ul>
+<p>Python's <code>Fraction</code> recomputed each answer from the same inputs. Two engines, one comparison.</p>
+<h2>Results</h2>
+<table><thead><tr><th>Group</th><th>Inputs</th><th>Numbers</th><th>Rejected with a message</th></tr></thead><tbody><tr><td>Two points</td><td>24</td><td>24</td><td>0</td></tr><tr><td>Proportion</td><td>14</td><td>13</td><td>1</td></tr><tr><td>Raw strings</td><td>17</td><td>12</td><td>5</td></tr><tr><td>Equation</td><td>6</td><td>5</td><td>1</td></tr><tr><td>Rise / run</td><td>6</td><td>5</td><td>1</td></tr><tr><td><strong>Total</strong></td><td><strong>67</strong></td><td><strong>59</strong></td><td><strong>8</strong></td></tr></tbody></table>
+<p>Zero mismatches. The rejections all explain themselves — zero denominator, mixed number fraction ≥ 1, "Horizontal run cannot be zero — a vertical rise has no numerical grade." None returned a silent zero.</p>
+<p>The hostile cases that came back exact:</p>
+<table><thead><tr><th>Input</th><th>Result</th></tr></thead><tbody><tr><td><code>1 1/2, 2, 3 1/2, 6</code></td><td>m = 2, b = −1</td></tr><tr><td><code>0.1, 0.2, 0.3, 0.4</code></td><td>m = 1, b = 1/10</td></tr><tr><td><code>5, 3, 5.0000001, 9</code></td><td>m = 60000000, Δx = 1/10000000</td></tr><tr><td><code>4, 4, 4, 4</code></td><td>one point, not a line</td></tr></tbody></table>
+<h2>The two things that did fail</h2>
+<p><strong>Angle drops the sign.</strong> m = 2 reports 63.43°. m = −2 also reports 63.43°, while the grade cell beside it reports −200%. Two adjacent stats, opposite meanings, no note anywhere that the angle is unsigned.</p>
+<p><strong>Two minus glyphs in one equation.</strong> <code>y = -2x − 1</code> — hyphen before <code>2x</code>, U+2212 before <code>1</code>. Nine of twenty-one equations carry the wide minus. Nearly invisible until you compare against a printed textbook.</p>
+<h2>What this does not cover</h2>
+<p>The graph. <code>drawGraph()</code> needs a DOM and pointer events, so no browser was opened. Axis scale, plotted position, drag behaviour, and the 375px layout of the steps panel are all unverified. Fifty-nine assertions about arithmetic say nothing about whether the page is usable.</p>
+<p>And a note on our own tools: the first two runs produced three false alarms, all from our regex and our test harness, not from the calculator. The accusations were broken before the accused was.</p>
+<h2>Disclosure</h2>
+<p>We own slopecalculatoronline.com. That is why the module was one request away.</p>
+<p>Three input modes and ten result fields: <a href="https://slopecalculatoronline.com/">slope calculator</a>.</p>
+<p>##</p>
+<p>The arithmetic is boring now, which is the correct outcome. What remains is a label, a hyphen, and the graph nobody has looked at properly.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 11 November 2026.</footer>
+</div>
+</body>
+</html>

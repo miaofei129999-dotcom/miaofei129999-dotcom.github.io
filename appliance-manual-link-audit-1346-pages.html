@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A Manual Page That Links a Government Dataset Instead of a Manual</title>
+<meta name="description" content="All 1,346 manual pages on our appliance site, fetched and parsed: 792 link the manufacturer, 547 link a Department of Energy dataset, 7 link a PDF, and 67 of 78 brands link nothing at all.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 12 November 2026</p>
+<h1>A Manual Page That Links a Government Dataset Instead of a Manual</h1>
+<p>Midea has 80 manual pages on my appliance site. Not one of them links the manufacturer.</p>
+<p>Summit has 47, also nothing. GE Profile 30, nothing. Beko 25, Asko 23, nothing and nothing.</p>
+<p>Meanwhile GE, the parent brand, has 109 manual pages and 109 manufacturer links.</p>
+<p>That gap is what sent me through all 1,346 of them.</p>
+<h2>How</h2>
+<p><code>sitemap-models.xml</code> on modelnumberfinder.com lists 6,800 URLs. Each model carries four sub-pages — manual, problems, parts, specs — leaving 1,346 URLs that end in <code>/manual/</code>.</p>
+<p>I fetched every one. Five curl workers, 30-second timeout, one retry, a regex over each page's <code>href</code> attributes, hosts recorded. 1,346 pages, 1,346 HTTP 200s.</p>
+<p>78 brands across 586 dryers, 404 washing machines, 356 dishwashers.</p>
+<h2>Where the links go</h2>
+<table><thead><tr><th>Only external host on the page</th><th>Pages</th></tr></thead><tbody><tr><td>Manufacturer support or product page</td><td>792</td></tr><tr><td><code>data.energystar.gov</code></td><td>547</td></tr><tr><td><code>s3.amazonaws.com</code> PDF</td><td>7</td></tr></tbody></table>
+<p>Each page links one external host. Not two. There is no page that offers both a manufacturer link and a data source.</p>
+<table><thead><tr><th>Brand behaviour</th><th>Brands</th><th>Pages</th></tr></thead><tbody><tr><td>Manufacturer linked for every model</td><td>9</td><td>792</td></tr><tr><td>Linked for most models (Whirlpool, Maytag)</td><td>2</td><td>159</td></tr><tr><td>Linked for no model</td><td>67</td><td>546</td></tr></tbody></table>
+<h2>Three findings</h2>
+<p><strong>1. A brand string is enough to break the link.</strong></p>
+<p>Nine brands get a manufacturer link on all their models: Amana, Bosch, Electrolux, Frigidaire, GE, Kenmore, KitchenAid, LG, Samsung. That is 792 pages, no exceptions.</p>
+<p>GE Profile is the same company as GE and points at the same support portal. It has no entry, so its 30 pages fell through to a default branch, and the default branch is a paragraph explaining that no verified link exists — followed by a Department of Energy dataset.</p>
+<p><strong>2. The seven PDFs are the visible edge of a manual paste.</strong></p>
+<p>Whirlpool has 121 manual pages and 114 manufacturer links. Maytag has 46 and 45. Those gaps sum to 7, and the site contains exactly 7 PDF links: six Whirlpool, one Maytag, all stored on a single S3 bucket.</p>
+<p>Seven files imported by hand. The rest generated. No other brand has a PDF.</p>
+<p><strong>3. The fallback paragraph is better written than the feature.</strong></p>
+<p>Open a Speed Queen dryer page and the title says "Manual — Official". The body says: *We do not have a verified manual link for the Speed Queen ADE6H178T.* Then it explains that Speed Queen serves manuals behind a model lookup rather than at fixed URLs, tells you where the model number sits on the machine, and describes the manual — 24 to 40 pages, one cycle chart for the drum, symptoms in place of error codes.</p>
+<p>Honest, specific, useful. Which is exactly why 547 of these pages shipped without anybody flagging them.</p>
+<p>Related: 1,344 of 1,346 pages state that the model has no published error-code list. The Bosch error-code page, for the brand with the deepest dishwasher coverage here, prints "0 codes confirmed" above two header rows and no data.</p>
+<h2>What I did not test</h2>
+<p>The 792 manufacturer links: I did not verify they resolve to the correct document. They are JavaScript lookups, sometimes captcha'd, sometimes geo-blocked. That is a real test and it is not in this one.</p>
+<p>The 7 PDFs: never opened, so I cannot confirm the file matches the model.</p>
+<p>The 547 DOE links: host confirmed, contents not followed. A fuel-and-water dataset's usefulness to someone with a dead dryer is a question a link audit cannot answer.</p>
+<p>And the site only builds manuals for three appliance types. Refrigerators and ovens have none, so 1,346 is the size of the current build, not of the category.</p>
+<h2>Disclosure</h2>
+<p>I built ModelNumberFinder, so the 67 brands with no link are my omission: <a href="https://modelnumberfinder.com/">modelnumberfinder.com</a>. Replacing the allowlist with a per-brand default is a day of work for the nine that function. The 67 that do not — Miele, Viking and others publish manuals behind lookups too — need a different page, and I have not settled on what it should say.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 12 November 2026.</footer>
+</div>
+</body>
+</html>

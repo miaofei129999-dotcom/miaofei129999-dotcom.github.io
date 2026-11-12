@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>3,198 Indexed Pages and 642 That Never Got Listed</title>
+<meta name="description" content="Ninety-six sitemap files on our own vehicle site, counted one by one: thirty-four brand files contain zero model-year URLs while the pages behind them answer HTTP 200 with EPA data.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 12 November 2026</p>
+<h1>3,198 Indexed Pages and 642 That Never Got Listed</h1>
+<p>Pontiac has 109 model years on my vehicle site. Mercury has 92. Suzuki has 83.</p>
+<p>None of them appears in the sitemap file named after the brand.</p>
+<p>That is the short version. The longer version took an hour of counting.</p>
+<h2>What I ran</h2>
+<p>Every site publishes a sitemap index. Mine has 96 entries: 94 brand files, one core file, one for OBD codes. Each brand file is a claim about which pages exist.</p>
+<p>I pulled all 96 and counted <code>&lt;loc&gt;</code> lines. <code>curl</code> through a local proxy, one regex, no page requests. Under a minute, because sitemap files are small.</p>
+<p>Then a verification pass. A sitemap is a claim, so for each brand whose file contained zero model-year URLs, I loaded the brand page, read its table of model / year count / year range, built one model-year URL from the widest span, and requested it.</p>
+<h2>The counts</h2>
+<table><thead><tr><th>Measure</th><th>Value</th></tr></thead><tbody><tr><td>Brand sitemaps</td><td>94</td></tr><tr><td>Files containing model-year URLs</td><td>60</td></tr><tr><td>Files containing brand and model pages only</td><td>34</td></tr><tr><td>Model-year URLs indexed</td><td>3,198</td></tr><tr><td>Nameplates (brand + model)</td><td>550</td></tr><tr><td>Model years the 34 silent brands claim</td><td>642</td></tr></tbody></table>
+<p>Year spread inside the 3,198: one page per year from 1985 to 2008, two per year from 2009 to 2016, 226 in 2017, 284 to 324 for every year from 2018 to 2026, and 152 already published for 2027.</p>
+<p>Verification: 24 of the 34 brand tables were machine-readable. All 24 URLs answered 200. All 24 served EPA fuel-economy rows. None was listed in the brand's sitemap.</p>
+<h2>Three results worth the trouble</h2>
+<p><strong>1. The pages were never missing, only unlisted.</strong></p>
+<p><code>/saab/9-3/1999</code> returns 200 with 17 KB of content, including EPA city, highway and combined figures for that model year. So do <code>/pontiac/grand-prix/1995</code>, <code>/mercury/grand-marquis/1995</code> and <code>/plymouth/neon/1995</code>.</p>
+<p>The Saab sitemap lists the brand page and seven model pages. It stops there. Thirty-four files like that, and if the brand pages are accurate about their own totals, 642 model-year pages that nothing announces.</p>
+<p><strong>2. Everything before 2017 is one nameplate.</strong></p>
+<p>Forty pages sitewide sit before model year 2017. Thirty-two are Honda Accord, 1985 through 2016, consecutive. Eight are Civic, 2009 through 2016.</p>
+<p>The other 548 nameplates begin in 2017. Seventy-two of them have a single year page.</p>
+<p>So the site can honestly say it covers vehicles back to 1985, and the sentence rests on one car.</p>
+<p><strong>3. The omitted brands have no competition.</strong></p>
+<p>Oldsmobile 58 model years. Isuzu 52. Saab 45. All marques that left the US market a decade or more ago. There is no fresh content race on a 1995 Grand Prix page because the car is not made.</p>
+<p>The generator skipped precisely the pages where ranking would be easiest. I would prefer to report that as a decision. It was a bug.</p>
+<h2>Limits</h2>
+<p>Eight of the 3,198 indexed pages were checked by hand — Accord 1988, 1996, 2004, 2010, 2016, 2018, 2022, 2026 — all with EPA rows. That is a sample of eight, not a proof about 3,190.</p>
+<p>Ten of the 34 brands list a single year without a range, so no URL could be built. Unverified, excluded from the 24.</p>
+<p>Whether Google has already found the unlisted pages, I cannot say. Sitemap omission is not deindexing, and I have no Search Console access here to check. A <code>site:</code> count is too fuzzy to settle it, so I am leaving it unknown.</p>
+<h2>Disclosure</h2>
+<p>CarSpecData is my site, and the sitemap generator is my code: <a href="https://carspecdata.com/">carspecdata.com</a>. The fix is small; the question of whether those 642 pages are worth crawling is the one I cannot answer without traffic data.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 12 November 2026.</footer>
+</div>
+</body>
+</html>

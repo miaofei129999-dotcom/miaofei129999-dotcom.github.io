@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nine Duplicates in 34,500 Cards: A Full Parse of a Flashcard Corpus</title>
+<meta name="description" content="Every deck page on our own flashcard site, parsed in Python: 34,500 cards, 34,484 unique questions, nine repeats, 88% of answers inside a 26-word band, and 22.5% opening with the same two words.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 13 November 2026</p>
+<h1>Nine Duplicates in 34,500 Cards: A Full Parse of a Flashcard Corpus</h1>
+<p>A flashcard site is a promise that the cards are worth reading. I run one with 156 decks in it, and until last Thursday I had never checked whether that promise held up.</p>
+<p>The site claims 34,500 cards. It is exactly 34,500. I parsed all of them with Python in about ten minutes.</p>
+<h2>Method</h2>
+<p>Deck pages on this site ship their entire card array inline as <code>window.BC_CARDS</code>, so the viewer can page through cards without a server call. That means the corpus is already public and needs no scraping framework.</p>
+<p>157 URLs from the sitemap (156 decks plus the index), curl through a local proxy, a single regex per file to grab the array, <code>json.loads</code> to parse it. Then <code>Counter</code> over normalized question strings and over normalized answer strings.</p>
+<p>Result: 156 parsed decks, 34,500 cards, no failed payloads.</p>
+<table><thead><tr><th>Measure</th><th>Value</th></tr></thead><tbody><tr><td>Decks</td><td>156</td></tr><tr><td>Cards</td><td>34,500</td></tr><tr><td>Unique questions</td><td>34,484</td></tr><tr><td>Questions in 2+ decks</td><td>9</td></tr><tr><td>Exact duplicate answers</td><td>0</td></tr><tr><td>Mean answer words</td><td>60.58</td></tr><tr><td>Std. deviation</td><td>8.29</td></tr><tr><td>50–75 words</td><td>88.0%</td></tr><tr><td>Over 90 words</td><td>50 cards</td></tr><tr><td>Chapters</td><td>9,286</td></tr><tr><td>Chapters at exactly 4 cards</td><td>7,297 (78.6%)</td></tr><tr><td>Deck size</td><td>24 / 183 / 531 (min / median / max)</td></tr></tbody></table>
+<h2>I was hunting the wrong defect</h2>
+<p>The plan was to find duplicated cards. 156 decks, one generator, one prompt — it seemed inevitable that the same question got asked under different titles.</p>
+<p>Nine duplicates. That is 0.05%. Three of them are one book filed twice under different slugs.</p>
+<p>So I had spent weeks assuming the problem was duplication when the problem was never duplication. That assumption was in an internal note I wrote, in the language of a finding rather than a guess. It is retracted as of now.</p>
+<h2>Three real numbers</h2>
+<p><strong>1. 22.5% of answers open with the same two words.</strong> "The author" in 5,642 cases, "The chapter" in 2,109. The question already establishes whose argument it is, so those words carry nothing. 132 of 156 decks also mix "The author argues" with "Mill argues" on the same book, with no rule about which appears when.</p>
+<p><strong>2. The length distribution is a target, not a natural spread.</strong> sd 8.29 on a mean of 60.58. 88% sit between 50 and 75 words. Fifty cards out of 34,500 exceed 90 words. A single fact gets stretched to sixty; an argument with four parts gets cut to sixty.</p>
+<p><strong>3. Chapters stop at four, and they mostly get to four.</strong> 7,297 of 9,286 chapters hold exactly 4 cards; 154 hold exactly 1. The ceiling became the target, so the fourth card in most chapters was written to fill a slot.</p>
+<p>On top of that, the citation field says "Chapter 7" in 99.9% of cards — no page, no section. A reader who wants the source paragraph is on their own.</p>
+<h2>Boundaries</h2>
+<p>Answer accuracy is untested. I have not read 156 books and I am not going to check twenty cards and publish a percentage that implies otherwise.</p>
+<p>Card usefulness is untested too. Whether a uniform 60-word answer helps or hinders recall needs users and a study, and I have neither for this post.</p>
+<h2>Disclosure</h2>
+<p>These decks live at <a href="https://wakecards.com/">wakecards.com</a> — public-domain titles, five cards free without an account. Everything above is measured against my own database, which is why none of it is flattering.</p>
+<p>The parse was easy. The three months of not doing it were the expensive part.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 13 November 2026.</footer>
+</div>
+</body>
+</html>

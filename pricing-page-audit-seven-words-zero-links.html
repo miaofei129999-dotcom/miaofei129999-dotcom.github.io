@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Six Words and No Exit: An Audit of a Pricing Page Nobody Curled</title>
+<meta name="description" content="Fourteen sitemap URLs from our own job site, measured for visible text and internal links: thirteen pages average 1,132 words and 9 to 18 links, the pricing page has 7 words, 0 links, and 8 FAQ answers that exist only in JSON-LD.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 13 November 2026</p>
+<h1>Six Words and No Exit: An Audit of a Pricing Page Nobody Curled</h1>
+<p>Pricing pages are usually the simplest page on a site. Mine turned out to be the only page on the site with no links in it.</p>
+<p>This is the audit. Fourteen URLs, all in the public sitemap, all answered 200, and one of them is a completely different shape from the other thirteen.</p>
+<h2>What was counted</h2>
+<p>For each of the 14 sitemap URLs I saved the raw response and measured three things:</p>
+<ul><li>visible text, after removing <code>&lt;script&gt;</code> and <code>&lt;style&gt;</code> blocks</li><li>hrefs that point to another page on the same host, excluding CSS, JS, favicon and self-canonical</li><li><code>Question</code> nodes in JSON-LD, and whether each question's text also appears in the delivered HTML</li></ul>
+<table><thead><tr><th>Page</th><th>Words</th><th>Page links</th><th>FAQ Qs</th><th>Qs in HTML</th></tr></thead><tbody><tr><td>/guide/limits/</td><td>2,879</td><td>15</td><td>12</td><td>12</td></tr><tr><td>/guide/how-long-do-job-postings-stay-up/</td><td>1,806</td><td>15</td><td>5</td><td>5</td></tr><tr><td>/guide/recently-posted-jobs/</td><td>1,544</td><td>15</td><td>5</td><td>5</td></tr><tr><td>/guide/new-grad-jobs-2027/</td><td>1,504</td><td>15</td><td>5</td><td>5</td></tr><tr><td>/terms</td><td>1,494</td><td>4</td><td>0</td><td>0</td></tr><tr><td>/privacy</td><td>1,456</td><td>4</td><td>0</td><td>0</td></tr><tr><td>/guide/how-many-jobs-should-i-apply-to/</td><td>1,455</td><td>14</td><td>5</td><td>5</td></tr><tr><td>/guide/h1b-sponsorship-jobs/</td><td>1,359</td><td>14</td><td>6</td><td>6</td></tr><tr><td>/guide/best-job-aggregator-sites/</td><td>1,057</td><td>15</td><td>5</td><td>5</td></tr><tr><td>/about</td><td>457</td><td>9</td><td>3</td><td>3</td></tr><tr><td>/ (home)</td><td>433</td><td>10</td><td>0</td><td>0</td></tr><tr><td>/contact</td><td>230</td><td>5</td><td>0</td><td>0</td></tr><tr><td>/guide/</td><td>174</td><td>18</td><td>0</td><td>0</td></tr><tr><td>/pricing</td><td>7</td><td>0</td><td>8</td><td>0</td></tr></tbody></table>
+<p>13 pages, 15,848 words, minimum 9 internal links. One page, 7 words, 0 links.</p>
+<h2>The three findings</h2>
+<p><strong>One: the price is in a meta tag, not in the page.</strong> Three tiers at $4.99, $9.99 and $19.99, with a clear description of what a point buys and a promise that points never expire. Beautifully written — in <code>meta description</code>, in <code>og:description</code>, and in the React payload. The body of the document has none of it. There is no <code>Product</code> or <code>Offer</code> schema either; the only structured data on the page is an <code>FAQPage</code>.</p>
+<p><strong>Two: eight answered questions exist only for machines.</strong> Where the jobs come from. What one point buys. Whether refunds exist. Average answer 36 words. Not one of those eight question strings appears in the served HTML — they are painted after hydration from a single <code>self.__next_f.push</code> call. Sitewide it is 54 <code>Question</code> nodes, 46 backed by visible text, and all 8 orphans on this page.</p>
+<p><strong>Three: nothing links out.</strong> The only internal references in the document are the CSS file, the JS chunk and the favicon. Every other page carries 9 to 18 page links. A visitor arriving from a search result has no in-product path forward.</p>
+<p>Privacy and terms are the next weakest at four links each, which is what a server-rendered nav buys you.</p>
+<h2>What I got wrong before</h2>
+<p>Nine days ago I wrote that this page renders four words server-side. Six, measured properly, plus an em dash. The number was wrong in the small way that makes you distrust the note — off by a rounding slip, right about the shape.</p>
+<p>The shape: correct page in the browser, empty document on the wire.</p>
+<h2>Not tested</h2>
+<p>Googlebot's rendered DOM. Google runs JavaScript, so the eight FAQ answers may well be visible to it. I am reporting the initial response, not the render, and I did not open Search Console in this run.</p>
+<p>Bing. No account, no data, no claim.</p>
+<p>Revenue. A dead-end pricing page probably costs money. "Probably" is the strongest thing I can say without analytics.</p>
+<h2>Disclosure</h2>
+<p>JobRadarly is one of the sites I operate — <a href="https://jobradarly.com/">jobradarly.com</a>. It reads companies' own job boards, drops postings below your role, city and salary floor, and shows the few that survive. The table above is my own server talking.</p>
+<p>Fourteen curls. The uncomfortable part is not the pricing page. It is wondering how many of the other thirteen I have only ever looked at in a browser.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 13 November 2026.</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Three Posts Hold 59% of My Internal Links</title>
+<meta name="description" content="All 56 URLs from our own calculator site's sitemap, 1,617 anchors parsed: 944 internal links, 220 pointing at 40 blog posts, and 129 of those aimed at the three newest.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 14 November 2026</p>
+<h1>Three Posts Hold 59% of My Internal Links</h1>
+<p>There is an article on my proportion calculator site called "How do you know if two ratios are equivalent?" It runs 897 words, it was published on 27 October, and exactly one internal link points at it. The blog index. That is the entire inbound graph for that page.</p>
+<p>An article published on 13 November has 44.</p>
+<p>Both pages sit in the same sitemap, use the same template, and target the same kind of search. One of them is wired into the site. The other is wired to nothing and hopes Google finds it.</p>
+<p>I wanted to know how lopsided it actually was, so I counted every link.</p>
+<p>Method first, because the number is only worth the crawl behind it. Pulled <code>/sitemap.xml</code>, got 56 URLs, fetched all 56 with curl through a local proxy. Any failure got two retries; none needed them. Parsed 1,617 <code>&lt;a&gt;</code> tags with a regex, resolved relative hrefs to absolute, dropped external hosts, deduped repeats within each page, then built the in/out table in Python. The site is server-rendered, so the HTML I saved is the full page.</p>
+<table><thead><tr><th>Measure</th><th>Value</th></tr></thead><tbody><tr><td>URLs in sitemap</td><td>56, all HTTP 200</td></tr><tr><td>Canonical equals own URL</td><td>56 of 56</td></tr><tr><td><code>&lt;a&gt;</code> tags parsed</td><td>1,617</td></tr><tr><td>Unique internal links after dedupe</td><td>944</td></tr><tr><td>Blog posts among those 56 pages</td><td>40</td></tr><tr><td>Internal links pointing at any blog post</td><td>220</td></tr><tr><td>Of those, held by the 3 newest posts</td><td>129 (58.6%)</td></tr><tr><td>Posts reachable by exactly one link</td><td>15</td></tr><tr><td>Posts with two links or fewer</td><td>22</td></tr><tr><td>Median links per post</td><td>2</td></tr><tr><td>Links leaving a post that go to nav or legal pages</td><td>360 of 700</td></tr><tr><td>Correlation, word count vs inbound links</td><td>r = −0.10</td></tr><tr><td>Clicks from home to any post</td><td>2</td></tr></tbody></table>
+<p>Now the three findings.</p>
+<p><strong>One. A "latest three" block is doing most of the linking.</strong> Forty of the 56 pages carry a block listing the three newest articles, and each block links all three. That is 129 links aimed at 3 URLs — 58.6% of every internal link pointing at blog content, and 13.7% of every internal link on the site. Strip that block and those three pages have almost nothing behind them. It is not a related-posts system. It is a calendar.</p>
+<p><strong>Two. Length earns nothing.</strong> r = −0.10 between word count and inbound links, which is statistical noise with a slight negative lean. The longest article on the site, 1,969 words on ratios as decimals, has 2 links. The 1,239-word grade-6 examples page has 44. Effort and internal authority are unrelated on this site, and they should not be.</p>
+<p><strong>Three. Half of every article's links are furniture.</strong> The 40 posts emit 700 unique internal links. 360 of them go to the homepage, /learn/, /blog/, /practice/ and the five legal pages. Only 340 point at another article or guide — about 8.5 per post, and most of those land on the same three.</p>
+<p>One more thing I did not go looking for: 46 anchors start with a literal date, like "2026-11-14 ↗ How to find x in a ratio". Anchor text that rewrites itself every day is not anchor text. It is a timestamp wearing a link.</p>
+<p>Here is the part I cannot measure. Whether that block renders at build time or on request. I fetched each page once, on 14 November, and every page agreed. If the block rotates on a schedule, tomorrow's crawl produces a different distribution and this table is a snapshot of one afternoon. I also cannot measure ranking flow, because that is Google's graph and not mine.</p>
+<p>Correction, and this one nearly went out as fact. My first pass on this site reported 41 orphan pages with zero inbound links. It was wrong. My filename parser had stripped <code>/blog/</code> out of the path, so I was testing whether <code>/blog/how-to-cross-multiply/</code> linked to <code>/how-to-cross-multiply/</code> — a URL that returns 404. I had built a link graph between 40 real pages and 40 pages that do not exist. Rewrote the parser to key off the sitemap order, re-ran it, and the orphan count went to zero. The 15 single-link pages are what survived the correction. Worth saying plainly: a crawler reporting zero is usually reporting its own bug.</p>
+<p>Disclosure: this is my own site, <a href="https://proportioncalculatoronline.com/">proportioncalculatoronline.com</a>, which is why I have the sitemap and the source. The fix I would apply is unglamorous — pull three related articles per post out of the guide pages instead of the date block, and give the 15 single-link posts two links each from the guides they belong to. That is roughly 30 hand-placed links, and I have not done it yet.</p>
+<p>The three pages holding 59% of the links are dated 13 and 14 November. Next week they will be three different pages, and the 15 sitting on a single link will still be sitting on a single link.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 14 November 2026.</footer>
+</div>
+</body>
+</html>

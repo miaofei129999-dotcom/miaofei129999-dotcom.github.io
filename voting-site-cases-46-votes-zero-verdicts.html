@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>39 Cases, 46 Votes, Zero Verdicts</title>
+<meta name="description" content="All 39 cases from our own voting site's JSON endpoint: 46 votes, 22 cases with none, a maximum of 3 votes on any case, and an outcome field that is null on every row.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 14 November 2026</p>
+<h1>39 Cases, 46 Votes, Zero Verdicts</h1>
+<p>On 15 October at 16:42 the first case went up: a $24 oversized wool-blend coat. Nothing else arrived until 08:16 the next morning, and then ten cases landed inside the same minute.</p>
+<p>I know the minute because I pulled the table out of the database instead of reading the page. WalletJury is my site. You post what you are about to buy and why. Everyone else votes Guilty or Not Guilty.</p>
+<p>The endpoint is <code>/api/list?sort=new&amp;limit=200</code>. One GET returns everything, and <code>next</code> comes back <code>null</code>. That matters, because the rendered page is 98 KB of JavaScript wrapped around 169 characters of visible text. Curl the HTML and you get a font list and a currency selector. Nothing else.</p>
+<p>So I curled the API on 14 November, dumped all 39 cases to a JSON file, and counted them in Python. Sample: everything. No exclusions, no sampling, no browser.</p>
+<table><thead><tr><th>What I counted</th><th>Result</th></tr></thead><tbody><tr><td>Cases in the database</td><td>39</td></tr><tr><td>First / last case</td><td>15 Oct 16:42 / 23 Oct 21:08</td></tr><tr><td>Days since a new case</td><td>21</td></tr><tr><td>Votes, guilty / not guilty</td><td>33 / 13</td></tr><tr><td>Cases with no votes at all</td><td>22 of 39</td></tr><tr><td>Most votes on any single case</td><td>3</td></tr><tr><td>Cases with a recorded outcome</td><td>0</td></tr><tr><td>Cases posted anonymously</td><td>39 of 39</td></tr><tr><td>Cases with an image</td><td>1</td></tr><tr><td>Model pre-verdict: guilty</td><td>36 of 39</td></tr><tr><td>Jury result across the 17 voted cases</td><td>16 guilty, 1 tie, 0 not guilty</td></tr></tbody></table>
+<p>Three things I did not expect.</p>
+<p><strong>One. Nothing has ever closed.</strong> The <code>outcome</code> field is <code>null</code> on all thirty-nine. Three weeks in, with a 3-0 or 2-1 tally already sitting on 17 cases, not one verdict has been written down. Either there is a closing threshold nobody reached, or that step was never built. From the outside I can only report the field is empty.</p>
+<p><strong>Two. The jury has never acquitted anyone.</strong> Sixteen guilty, one tie, zero not-guilty, across every case that received a vote. On its own that reads like a decisive crowd. Then you look at the model: it called guilty on 36 of 39 cases before any vote existed, and on 17 of the 17 that later got votes. The crowd agreed with the machine 16 times in 17. A machine that says guilty 92% of the time will produce that agreement whether or not anyone is thinking.</p>
+<p><strong>Three. The voters are not on this site.</strong> The <code>replies</code> field sums to 51, and all 51 sit on the 17 voted cases — exactly three each, never two, never four. Each of those cases carries a <code>last</code> reply object with a <code>source</code> field. Seven say facebook. Six say reddit. Three say instagram. One says x. Seventeen replies, thirteen distinct handles, and not one attributed to a WalletJury account.</p>
+<p>One more detail that stings. In 12 of those 17 cases the newest reply sits on the not-guilty side while the counter shows guilty. The last comment a reader sees is arguing the position that lost.</p>
+<p>Here is the part I cannot measure. Whether three is a ceiling. The API hands back two integers, <code>g</code> and <code>a</code>, and no vote timestamps and no voter identity. So a hard cap of three votes per case and three people who happened to show up look identical from here. I am not going to turn that into a finding. Guessing and then averaging the guess is how you get a number that means nothing.</p>
+<p>I also did not investigate why posting stopped. The scheduler dropped three cases a night at 21:0x from 17 October through 23 October, then stopped at 21:08. Could be switched off, could be broken. I did not open the cron before writing this, so I am not going to characterise it.</p>
+<p>Correction, since I have made this mistake before. On 10 November I wrote that this site had "39 cases and 46 votes, and it is growing." It is not growing. Four days later it is the same 39 and the same 46. I read the total and ignored the timestamps.</p>
+<p>Disclosure: WalletJury is one of my own sites, which is the only reason I can read the raw endpoint instead of the rendered page. The front end is at <a href="https://walletjury.com/">walletjury.com</a>. I did not post, vote, or reply on anything while taking these measurements. Seeding votes to make my own numbers look better would have destroyed the only thing worth measuring.</p>
+<p>The last case is a $99.99 Minecraft creeper mini fridge. No votes, no comments, no verdict. Twenty-one days later it is still waiting for a jury that stopped showing up.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 14 November 2026.</footer>
+</div>
+</body>
+</html>

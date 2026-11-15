@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>76 OBD-II Pages, Zero Airbag Codes: An Audit of Our Own Code Database</title>
+<meta name="description" content="Every OBD-II page on our own site, fetched one at a time: 76 pages, 70 powertrain codes, zero airbag or ABS codes, two pages that are 99.4% identical, and a source attribution that is wrong on all 76.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 15 November 2026</p>
+<h1>76 OBD-II Pages, Zero Airbag Codes: An Audit of Our Own Code Database</h1>
+<p>Audit note, 2026-11-15. Scope: all OBD-II code pages published on this domain. Method: sitemap, then a single request at a time, three attempts per URL before calling it dead. Result: 76 pages, 76 responses of 200, zero dead links, four findings.</p>
+<p>The short version: the coverage is skewed hard toward powertrain, two of the misfire pages are the same page with a different digit, navigation caps at six neighbours regardless of system size, and every page carries a source attribution that is wrong.</p>
+<h2>How we measured</h2>
+<p>Fetch loop: Python 3.13, <code>urllib</code>, one thread, 300ms sleep, three tries. No headless browser — these pages are server-rendered, and a browser would only have added a way for the run to fail quietly.</p>
+<p>Parse: strip script/style/nav/footer, then count words and pull fields by their labels. Field extraction used regex against the flattened text rather than a DOM parse, which is a shortcut with a known failure mode — it assumes the label order never changes. On these pages it does not, but on a template change it would.</p>
+<p>Similarity: two measures. <code>difflib</code> on body text only, and Jaccard on 6-word shingles over the whole page. Measuring the body only was a correction, not the first attempt — the first attempt included the sibling navigation block, which differs on every page for legitimate reasons and pulled every score down.</p>
+<h2>What is in there</h2>
+<table><thead><tr><th>Prefix</th><th>Codes</th><th>What the prefix covers</th></tr></thead><tbody><tr><td>P</td><td>70</td><td>Powertrain</td></tr><tr><td>U</td><td>6</td><td>Network / communication</td></tr><tr><td>B</td><td>0</td><td>Body (airbags, restraints, comfort)</td></tr><tr><td>C</td><td>0</td><td>Chassis (ABS, steering, suspension)</td></tr></tbody></table>
+<table><thead><tr><th>System</th><th>Codes</th><th>Number range</th></tr></thead><tbody><tr><td>Fuel &amp; Air Metering</td><td>33</td><td>P0100–P0299</td></tr><tr><td>Ignition &amp; Misfire</td><td>12</td><td>P0300–P0352</td></tr><tr><td>Emissions Control</td><td>9</td><td>P0401–P0456</td></tr><tr><td>Transmission</td><td>8</td><td>P0700–P0755</td></tr><tr><td>Network</td><td>6</td><td>U0001–U0155</td></tr><tr><td>Electrical</td><td>5</td><td>P0562–P0606</td></tr><tr><td>Speed &amp; Idle Control</td><td>3</td><td>P0500–P0507</td></tr></tbody></table>
+<table><thead><tr><th>Severity label</th><th>Codes</th></tr></thead><tbody><tr><td>Repair soon</td><td>45</td></tr><tr><td>Low urgency</td><td>22</td></tr><tr><td>Do not keep driving</td><td>9</td></tr></tbody></table>
+<table><thead><tr><th>Measure</th><th>Value</th></tr></thead><tbody><tr><td>Words per page, min</td><td>382</td></tr><tr><td>Median</td><td>426</td></tr><tr><td>Max</td><td>478</td></tr><tr><td>Standard deviation</td><td>17.1</td></tr><tr><td>Pages listing every peer in their own system</td><td>14 of 76</td></tr><tr><td>Pages listing exactly 6 peers</td><td>62 of 76</td></tr></tbody></table>
+<h2>Three things I did not expect</h2>
+<p><strong>The misfire run stops at cylinder six.</strong></p>
+<p>P0301 through P0306 exist. All six carry the "Do not keep driving" label, which is the right call — an unburnt-fuel misfire will cook a catalytic converter.</p>
+<p>P0307 and P0308 return 404. Retried twice each, 404 both times. So do P0309 and P0310, and P0104 and P0105 in the air-metering block.</p>
+<p>So we tell the owner of a V6 that a misfire means stop driving, and we tell the owner of a V8 nothing at all. The most common vehicles on American roads are V8 trucks. The coverage stops exactly where the biggest engines begin.</p>
+<p><strong>Two of those pages are literally the same page with the digit changed.</strong></p>
+<p>I compared the body text only — everything between the system label and the sibling list — so the "other codes" block could not inflate the score.</p>
+<p>P0303 against P0302: 99.4% character similarity. Eight difference blocks. Every one of the eight is the numeral <code>2</code> replaced by a <code>3</code>. Nothing else.</p>
+<p>P0304 against P0302: 99.4%. Eight blocks. Every one is <code>2</code> replaced by <code>4</code>.</p>
+<p>That is not two pages about two different faults. That is one page, twice, with the cylinder number stamped in. Same cause list, same diagnosis paragraph, same FAQ. Google compares text, not intent.</p>
+<p>P0305 and P0306 are the honest ones, and the contrast is the useful part. 81% similarity, not 99%. The sentences were actually rewritten — different cause ordering, different phrasing in the diagnosis, plus one detail worth keeping: cylinder numbering differs between V6 and V8 engines, so confirm which cylinder you are actually chasing. Whoever wrote those two did the work. Whoever generated 3 and 4 did not.</p>
+<p><strong>Navigation gives up at six, no matter how many peers exist.</strong></p>
+<p>62 of the 76 pages list exactly six "other codes in this system" links. The Fuel &amp; Air page has 33 codes in its system and shows six. The Ignition page has 12 and shows six.</p>
+<p>Six is not a design decision about how many links a reader wants. It is a <code>slice(0, 6)</code>. The result: 62 pages cannot reach two-thirds of their own neighbours, and no page in the site tells you which six you are missing.</p>
+<p>And every page is the same length. 382 to 478 words, standard deviation 17, whether the page sits in a system with 3 codes or 33. The template decides the length, not the fault.</p>
+<h2>One thing we wrote wrong</h2>
+<p>Every one of the 76 pages carries the site footer: "All figures sourced from NHTSA and the U.S. Department of Energy (fueleconomy.gov)."</p>
+<p>That sentence is true for vehicle specs. It is false on every OBD page. Code numbers, system names and definitions on these pages come from the SAE J2012 / ISO 15031-6 generic code standard — which the sourcing box on the same page says, three inches above the footer. Two boxes, one page, contradicting each other, 76 times.</p>
+<p>We are fixing the footer template this week. The OBD pages are not NHTSA data and should never have said so.</p>
+<h2>What this measurement cannot tell you</h2>
+<p>Which of the missing codes anyone actually looks up.</p>
+<p>I have no keyword data for this site and I did not buy any for a blog post. There are 167 empty numbering slots in the Fuel &amp; Air block and most of them probably correspond to nothing anyone has ever typed into a search box. The honest statement is: P0307 and P0308 are gaps I can prove matter, because a reader asked about one. The other 160-odd gaps I can only count, not rank.</p>
+<p>I also did not test any of this against a live vehicle. The symptom and cause lists are written from the generic definition, not from a scan of a real car. If your P0171 turned out to be a vacuum leak and our page said intake gasket, that is the gap between a generic code and your specific engine, and no amount of page-building closes it.</p>
+<h2>Disclosure</h2>
+<p>I build <a href="https://carspecdata.com/">CarSpecData</a>, the site this audit is about. Everything above is a measurement of my own pages, including the parts that make them look bad.</p>
+<p>The fix order is not the order I would like. Footer first, because a wrong attribution on 76 pages is worse than a missing page — one is a dead end, the other is a claim. Then the cylinder run, then the sibling list. The duplicate pair gets rewritten from scratch rather than reworded, because rewording a template produces the same page again.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 15 November 2026.</footer>
+</div>
+</body>
+</html>

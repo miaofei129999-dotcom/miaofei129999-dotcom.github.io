@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Two Sitemaps, Zero Overlap: The 3,172 Pages We Never Declared</title>
+<meta name="description" content="Both sitemap files on our own appliance database: 10,068 URLs, no shared entry, 793 model pages with undeclared detail pages, and an error-code page type that exists exactly twice.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 16 November 2026</p>
+<h1>Two Sitemaps, Zero Overlap: The 3,172 Pages We Never Declared</h1>
+<p>A sitemap is supposed to answer one question: what pages does this site have? For our appliance database it answers a different one — what pages did somebody remember to list.</p>
+<p>The gap between those two questions is 3,172 pages. Here's how we counted them, and where the count went wrong the first time.</p>
+<h2>What we did</h2>
+<p>Both sitemap files on <code>modelnumberfinder.com</code> are small enough to pull in one request each:</p>
+<ul><li><code>sitemap-core.xml</code> — 283 KB</li><li><code>sitemap-models.xml</code> — 1.4 MB</li></ul>
+<p>We downloaded both through a proxy, extracted every <code>&lt;loc&gt;</code>, deduplicated, and sorted by URL depth. No crawling, no headless browser. Then we checked the pages the arithmetic told us shouldn't exist.</p>
+<h2>What the two files contain</h2>
+<table><thead><tr><th>File</th><th>URLs</th><th>Model pages</th><th>Brand-category pages</th><th>Detail sub-pages</th></tr></thead><tbody><tr><td>sitemap-core.xml</td><td>1,668</td><td>1,655</td><td>0</td><td>0</td></tr><tr><td>sitemap-models.xml</td><td>8,400</td><td>827</td><td>817</td><td>6,756</td></tr><tr><td>Overlap between them</td><td><strong>0</strong></td><td>0</td><td>—</td><td>—</td></tr></tbody></table>
+<p>Zero shared URLs. That alone isn't a bug — two files can legitimately be additive. What makes it a bug is that the names describe neither file. <code>sitemap-models.xml</code> is 80% not models.</p>
+<p>The split isn't curated versus generated either. <code>core</code> covers 16 brands, <code>models</code> covers 111, and 101 brands appear in exactly one of the two. It's big-brands-here, everyone-else-there, with filenames that say something else.</p>
+<h2>The detail pages, sorted by type</h2>
+<table><thead><tr><th>Page type</th><th>Count in sitemap</th></tr></thead><tbody><tr><td>/manual/</td><td>1,689</td></tr><tr><td>/specs/</td><td>1,689</td></tr><tr><td>/parts/</td><td>1,688</td></tr><tr><td>/problems/</td><td>1,688</td></tr><tr><td>/error-codes/</td><td><strong>2</strong></td></tr></tbody></table>
+<p>Those first four cover 1,689 appliance models. The site declares 2,482 model root pages total (1,655 in core, 827 in models). So 793 model pages are declared with no detail pages behind them at all.</p>
+<p>We picked four of those 793 at random and asked for <code>/manual/</code>. All four returned HTTP 200.</p>
+<h2>Three things this changed</h2>
+<p><strong>The sitemap undercounts the site by roughly a third.</strong> 793 models × 4 page types = 3,172 detail pages that respond 200 and appear in neither file. If you're counting our pages from the sitemap, you're counting 6,756 where there are probably 9,928.</p>
+<p><strong>The gap is 87% one category.</strong> Of the 793 undeclared models, 693 are refrigerators. Refrigerators are the second-largest category on the site. Manual, specs, parts and problems exist across eight categories and skip the one with the most models in it. That is not a decision anyone made on purpose, or if it was, nobody wrote it down.</p>
+<p><strong>The word "Error Codes" is in our own title tag. There are two of them.</strong> Our homepage title reads "Appliance Manuals, Specs, Parts &amp; Error Codes." The sitemap contains exactly two URLs ending in <code>/error-codes/</code> — a Maytag MVWB965H and a Whirlpool WTW8000D, both washing machines. Meanwhile <code>/problems/</code> runs on 1,688 models. Two page types for one idea, and a 1,688-to-2 split.</p>
+<p>So we opened four of the <code>/problems/</code> pages. Every one of them says there is no public code table for that model. None of the four contains a single code.</p>
+<h2>Where I got it wrong first</h2>
+<p>My first pass counted <code>sitemap-models.xml</code> as 8,400 model pages. I wrote that down and started building a chart around it. The file contains 817 brand-category pages and 6,756 detail sub-pages. Model pages: 827. The filename says models. The file is mostly not models. I've corrected the note this article grew out of.</p>
+<h2>What we can't measure</h2>
+<p>Whether Google has indexed any of the 3,172 undeclared pages. A sitemap is a hint, not a gate: unlisted URLs routinely get crawled through internal links, and listed ones routinely get ignored. That question needs Search Console coverage data and we didn't pull it.</p>
+<p>We also sampled four <code>/problems/</code> pages out of 1,688 and four undeclared models out of 793. Four is enough to say "this exists." It is not enough to say "all 1,688 are empty," and we're not saying that.</p>
+<h2>Disclosure</h2>
+<p>This is our own site: <a href="https://modelnumberfinder.com/">modelnumberfinder.com</a>. Both sitemap files are public, so every number above can be recomputed in about ten minutes by anyone who wants to check our work.</p>
+<p>The fix is not more pages. It's a sitemap that generates from the route table instead of a hand-kept list, and one page type where we currently have two. Neither of those is interesting to write about, which is probably why they're still open.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 16 November 2026.</footer>
+</div>
+</body>
+</html>

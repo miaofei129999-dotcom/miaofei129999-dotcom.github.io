@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>144 of 191 Title Tags Are Too Long: A Full-Site Metadata Audit</title>
+<meta name="description" content="All 191 pages of our own flashcard site, fetched one at a time: 144 titles over 60 characters, a 46-character boilerplate tail repeated on 156 pages, and nine other metadata checks that all pass.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 16 November 2026</p>
+<h1>144 of 191 Title Tags Are Too Long: A Full-Site Metadata Audit</h1>
+<p>Seventy-five percent of this site's title tags don't fit in a search result. We know because we measured all 191 of them, not a sample, and not with a third-party scanner.</p>
+<p>The trigger was a screenshot from a reader. Her Google result for our Meditations page ended at "Key Concepts &amp; Re". She asked whether the deck was broken. The deck was fine. It was the tag.</p>
+<h2>How we counted</h2>
+<p><code>wakecards.com/sitemap.xml</code> lists 191 URLs. We pulled all of them, one at a time, 250 ms apart, through a local proxy, and parsed each response with Python's <code>urllib</code> and <code>re</code>. Then we unescaped the HTML entities and counted characters on the decoded string.</p>
+<p>We chose the slow method on purpose. An earlier crawl in this project used eight threads against one small server and produced 28 errors that turned out to be timeouts masquerading as 404s. Single thread is the only way to tell a missing page from an impatient one.</p>
+<p>All 191 URLs returned HTTP 200 on the first attempt. Nothing in this set is a dead link.</p>
+<p>Entities matter more than they sound. <code>&amp;amp;</code> is five characters of HTML and one character of title. The raw pass put 160 pages over the line. Decoded, it's 144. Sixteen pages of that gap were my own measuring mistake, not the site's fault.</p>
+<h2>What the 191 pages look like</h2>
+<table><thead><tr><th>Page type</th><th>Pages</th><th>Mean title</th><th>Shortest</th><th>Longest</th><th>Over 60 chars</th></tr></thead><tbody><tr><td>Book-card pages</td><td>156</td><td>83 chars</td><td>52</td><td>136</td><td>133</td></tr><tr><td>Blog posts</td><td>23</td><td>58 chars</td><td>44</td><td>64</td><td>10</td></tr><tr><td>Landing, legal, index</td><td>11</td><td>50 chars</td><td>26</td><td>64</td><td>1</td></tr><tr><td>All pages</td><td>191</td><td>78 chars</td><td>26</td><td>136</td><td>144</td></tr></tbody></table>
+<p>75% of the site is over the line. The longest is 136 characters, which is a book title about a book title.</p>
+<h2>Three things that came out backwards</h2>
+<p><strong>The rest of the head is clean.</strong> We went in expecting rot and got the opposite. Zero pages are missing a meta description. Zero descriptions are duplicated across the 191. All 191 canonicals point at the page they sit on. Every page has exactly one H1. No page carries a robots meta that would keep it out. Ten of eleven fields are already fine. One is wrong.</p>
+<p><strong>Every book page ends with the same 46 characters.</strong> The tail is literally <code> Flashcards: Key Concepts &amp; Review | WakeCards</code>, on all 156 of them, no exceptions. That leaves 14 characters of budget for the book. The median book title on this site is 37 characters. It cannot fit — and 133 of 156 don't.</p>
+<p><strong>Deleting the brand suffix doesn't save it.</strong> We tried the obvious patch. Strip <code> | WakeCards</code> from every page and the mean falls from 78 to 66 characters, and the number over the line falls from 144 to 98. So roughly half this problem is a suffix we keep paying for. The other half is that we wrote a sentence where a noun phrase belonged.</p>
+<p>The 47 pages that fit are not a random subset. They're the hand-typed blog posts and the short classics — The Prince sits at 56 characters, Walden at 52, Tao Te Ching at 58. Every one of them is a page where somebody typed a short title into a field and stopped.</p>
+<h2>What we can't measure</h2>
+<p>How many of these Google actually cuts.</p>
+<p>Truncation happens by pixel width, at a font size we don't control and can't query. Google also rewrites titles it judges unhelpful, and the rate it does that at is a Search Console number we didn't pull for this post. So 60 characters is a convention borrowed from tooling, not a measurement of anything Google does.</p>
+<p>What we measured is the input. 144 pages carry an average of 25.8 characters more than that convention allows.</p>
+<h2>Disclosure</h2>
+<p>WakeCards is a site we build and run: <a href="https://wakecards.com/">wakecards.com</a>. The 191-page list, the crawl, and the numbers above all come from one pass this week. We'll do the same pass again after the rewrite and publish whatever it says, including if it says nothing moved.</p>
+<p>The fix is 156 rewrites, one tail per book, no shared template. We know the size of the job now, which is the part we didn't have on Tuesday.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 16 November 2026.</footer>
+</div>
+</body>
+</html>

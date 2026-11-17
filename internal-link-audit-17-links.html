@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Seventeen Links, Fourteen Pages, and a Page Nobody Points At</title>
+<meta name="description" content="An internal link audit of our own job site: 17 unique targets across 14 pages, one 404 that belongs to Cloudflare, and the longest page on the site linked from nowhere.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 17 November 2026</p>
+<h1>Seventeen Links, Fourteen Pages, and a Page Nobody Points At</h1>
+<p>A site with fourteen pages has seventeen internal links. That is the entire link graph, and it fits on one screen.</p>
+<p>I crawled all of it on 17 November 2026. Most of the audit is about the one page that gets none of those links.</p>
+<h2>Method</h2>
+<p>Every URL in jobradarly.com/sitemap.xml, fetched one at a time. All fourteen returned 200.</p>
+<p>From the saved HTML, every <code>&lt;a href&gt;</code> was extracted by regex, relative paths resolved against the page URL, <code>#</code> anchors and <code>mailto:</code> dropped, and only same-domain targets kept. That left 17 unique internal targets.</p>
+<p>Each target was then requested a second time with redirects disabled, so a redirect reports as a redirect rather than resolving to its destination. Any response that was not 200 got two further attempts before being written down — the retry rule that has caught four false dead-link reports for us this year.</p>
+<h2>Results</h2>
+<table><thead><tr><th>Target</th><th>Status</th><th>Pages linking</th></tr></thead><tbody><tr><td>/</td><td>200</td><td>13</td></tr><tr><td>/about</td><td>200</td><td>10</td></tr><tr><td>/contact</td><td>200</td><td>12</td></tr><tr><td>/guide/</td><td>200</td><td>10</td></tr><tr><td>/guide/h1b-sponsorship-jobs/</td><td>200</td><td>7</td></tr><tr><td>/guide/recently-posted-jobs/</td><td>200</td><td>6</td></tr><tr><td>/guide/how-long-do-job-postings-stay-up/</td><td>200</td><td>4</td></tr><tr><td>/guide/how-many-jobs-should-i-apply-to/</td><td>200</td><td>4</td></tr><tr><td>/guide/best-job-aggregator-sites/</td><td>200</td><td>2</td></tr><tr><td>/guide/new-grad-jobs-2027/</td><td>200</td><td>2</td></tr><tr><td>/guide/limits/</td><td>200</td><td>1</td></tr><tr><td>/pricing</td><td>200</td><td>11</td></tr><tr><td>/privacy</td><td>200</td><td>11</td></tr><tr><td>/terms</td><td>200</td><td>11</td></tr><tr><td>/login</td><td>200</td><td>1</td></tr><tr><td>jobradarly.com (no trailing slash)</td><td>200</td><td>2</td></tr><tr><td>/cdn-cgi/l/email-protection</td><td><strong>404</strong></td><td>13</td></tr></tbody></table>
+<h2>Three things that were not what they looked like</h2>
+<p><strong>One: the 404 belongs to Cloudflare.</strong></p>
+<p><code>/cdn-cgi/l/email-protection</code> shows up on thirteen of fourteen pages because Cloudflare's email obfuscation rewrites each mailto into a scripted link. With JavaScript running, it works. Read as raw HTML, it points at a page that does not exist.</p>
+<p>The real count of broken internal links on this site is zero. A checker that says thirteen is describing itself.</p>
+<p><strong>Two: the deepest page gets the fewest links.</strong></p>
+<table><thead><tr><th>Guide</th><th>Body words</th><th>Inbound from other guides</th><th>FAQ questions in markup</th></tr></thead><tbody><tr><td>/guide/limits/</td><td>2,852</td><td><strong>0</strong></td><td>12</td></tr><tr><td>/guide/how-long-do-job-postings-stay-up/</td><td>2,144</td><td>3</td><td>5</td></tr><tr><td>/guide/h1b-sponsorship-jobs/</td><td>1,747</td><td>6</td><td>6</td></tr><tr><td>/guide/recently-posted-jobs/</td><td>1,522</td><td>5</td><td>5</td></tr><tr><td>/guide/new-grad-jobs-2027/</td><td>1,481</td><td>1</td><td>5</td></tr><tr><td>/guide/how-many-jobs-should-i-apply-to/</td><td>1,431</td><td>3</td><td>5</td></tr><tr><td>/guide/best-job-aggregator-sites/</td><td>1,250</td><td>1</td><td>5</td></tr></tbody></table>
+<p>The longest page — 2,852 words explaining what the product cannot do, which is the most useful thing a product can publish — is linked from the hub and from no other guide. Zero sibling links. The shortest guide has six.</p>
+<p>Nineteen sibling links exist in total. Eleven of the nineteen, 58%, point at two pages.</p>
+<p><strong>Three: 54 FAQ questions are marked up for a feature that stopped showing.</strong></p>
+<p>Nine pages carry 54 questions in FAQPage markup: 12 on the limits page, 8 on pricing, 5 or 6 on each guide, 3 on about. No duplicates. Somebody wrote all of them by hand.</p>
+<p>Since 2023, FAQ rich results have been limited to government and health sites. Fifty-four carefully written questions currently earn zero extra space in a search result.</p>
+<p>On the same eight pages, not one Article block declares an <code>image</code> — the property Article markup still gets credit for.</p>
+<h2>What the audit can't see</h2>
+<p>Whether this costs anything. I don't have Search Console for this domain open, so I cannot tell you which of the 14 URLs are indexed, what any of them rank for, or whether the link imbalance has moved a single visit.</p>
+<p>A JavaScript-rendering crawl was not tested either. Everything above is the raw HTML one request returns.</p>
+<p>And the pattern may be deliberate. Keeping the limits page quiet makes commercial sense if it is the least profitable page on the site. That would be a decision rather than a defect, and it isn't mine to reverse.</p>
+<h2>A correction we owe</h2>
+<p>In October I wrote that this site had zero JobPosting markup and no job detail URLs, and let that imply it "skips structured data".</p>
+<p>Half of that was wrong. Eight of these pages carry three JSON-LD blocks each — Article, BreadcrumbList, FAQPage — with dates matching the sitemap's <code>lastmod</code> to the day. I went looking for a mismatch and there wasn't one.</p>
+<p>The JobPosting half still holds. The other half was sloppy, and sloppy lines get quoted back at you.</p>
+<h2>Disclosure</h2>
+<p>JobRadarly is one of the sites we build. Every URL crawled above is ours, and nothing on the site was changed to shape the audit.</p>
+<p>Site: <a href="https://jobradarly.com/">jobradarly.com</a></p>
+<h2>Left hanging</h2>
+<p>Four sentences of HTML and ten minutes would fix the inverted links.</p>
+<p>Whether to make that change is a different question. A page that honestly lists what your product cannot do is either the most trust-building page you own or the fastest way to lose a signup, and I have exactly one data point — my own opinion.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 17 November 2026.</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>39 Cases, 21 Fields, One Field That Predicts the Verdict</title>
+<meta name="description" content="The full case database of our own purchase-debate site, pulled in one request: 21 fields, 7 that vary, 29 out of 29 guilty verdicts in one bucket, and three fields that have never been filled.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 17 November 2026</p>
+<h1>39 Cases, 21 Fields, One Field That Predicts the Verdict</h1>
+<p>A database of thirty-nine purchase debates. Each one asks strangers to decide whether somebody should buy something.</p>
+<p>I pulled the whole thing on 17 November 2026 and counted how much of it is real. Most of it isn't.</p>
+<h2>How the data was collected</h2>
+<p>One HTTP request, no browser involved. WalletJury's interface loads its case list from a public JSON endpoint:</p>
+<p><code>GET https://walletjury.com/api/list?sort=new&amp;limit=200&amp;offset=0</code></p>
+<p>The response carried 39 cases and <code>next: null</code>. Null on the first page means there is no second page. So this is the full database, not a sample. Nothing was filtered out. 29,402 bytes.</p>
+<p>We then walked every key on every case. Twenty-one keys.</p>
+<h2>What the fields actually contain</h2>
+<table><thead><tr><th>Field</th><th>Filled</th><th>Detail</th></tr></thead><tbody><tr><td>item</td><td>39/39</td><td></td></tr><tr><td>price</td><td>39/39</td><td>20 to 12,999</td></tr><tr><td>currency</td><td>39/39</td><td>USD 37, CNY 2</td></tr><tr><td>defense</td><td>39/39</td><td>32–375 characters, median 244</td></tr><tr><td>use</td><td>35/39</td><td>Daily 19, Weekly 8, Not sure 7, few times a year 1</td></tr><tr><td>afford</td><td>39/39</td><td>stretch 22, easily 10, not really 7</td></tr><tr><td>anon</td><td>39/39</td><td>all true</td></tr><tr><td>authorName</td><td><strong>0/39</strong></td><td>never once</td></tr><tr><td>hasImage</td><td>1/39</td><td></td></tr><tr><td>ai.lean</td><td>39/39</td><td>guilty 36, not guilty 3</td></tr><tr><td>ai.opinion</td><td>39/39</td><td>20–121 characters, median 52</td></tr><tr><td>outcome</td><td><strong>0/39</strong></td><td>the thing the product promises</td></tr><tr><td>votes</td><td>46 total</td><td>spread over 17 cases only</td></tr><tr><td>replies</td><td>51 total</td><td></td></tr></tbody></table>
+<p>Twenty-one fields. Seven carry real variation: item, price, currency, defense, use, afford, and the AI's one-line opinion.</p>
+<h2>Three findings worth the request</h2>
+<p><strong>One: 29 out of 29.</strong></p>
+<p>Every case where the poster picked "It's a stretch" (22 cases) or "Not really" (7 cases) came back Guilty — all twenty-nine.</p>
+<p>The only three Not Guilty verdicts are inside the ten "Easily" cases. A 30% acquittal rate in one bucket, 0% in the other two.</p>
+<p><strong>Two: the vote count doesn't spread.</strong></p>
+<p>22 of 39 cases have zero votes. The other 17 have exactly 3 votes (12 cases) or exactly 2 (5 cases). Nothing between and nothing above.</p>
+<p>46 votes have been cast on this database, all inside those 17 cases, and every one landed on the same two numbers. That is not a distribution, it is a shape.</p>
+<p><strong>Three: three fields have never done anything.</strong></p>
+<p><code>authorName</code> is empty on all 39. <code>hasImage</code> is true on one. <code>outcome</code> is null on all 39 — the field that would record what the jury decided.</p>
+<p>Meanwhile <code>afford</code>, the field nobody thinks about, splits the dataset cleanly in two.</p>
+<h2>What the audit can't see</h2>
+<p>The reason. We observe the output, not the reasoning. Three explanations fit the same table.</p>
+<p>The model reads <code>afford</code> and treats "I can easily afford this" as grounds to acquit. Or it ignores <code>afford</code> and reads the text — people who pick "easily" write differently than people who pick "stretch". Or it is self-selection: if you can afford the thing you only post the genuinely borderline ones, and borderline cases get acquitted.</p>
+<p>Separating those three requires controlled submissions, and posting fake cases into a live product is not something I'll do for a nicer chart. 29 for 29 is the whole of what I can defend.</p>
+<p>We also never rendered the site in a browser for this audit. Everything above is the API payload, read as text.</p>
+<h2>A correction to our own notes</h2>
+<p>On 14 November I wrote that this site had 39 cases and 46 votes. It is 17 November and it is still 39 and 46.</p>
+<p>That line was written assuming the next pull would move. The newest case was created 23 October at 13:08 UTC and nothing has arrived in the 25 days since. The first version should have said "unchanged since 23 October".</p>
+<h2>Disclosure</h2>
+<p>WalletJury is one of the sites we build and run. These figures come from its own public endpoint, and nothing on the site was changed to produce them.</p>
+<p>All 39 cases are public: <a href="https://walletjury.com/">walletjury.com</a></p>
+<h2>Left open</h2>
+<p>What do you do with a field that predicts the verdict 29 times out of 29?</p>
+<p>Keep it, because it works. Drop it, because a jury that reads your bank balance before your argument is not a jury.</p>
+<p>I don't know which is right, and I'd rather leave that hanging than pretend I settled it.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 17 November 2026.</footer>
+</div>
+</body>
+</html>

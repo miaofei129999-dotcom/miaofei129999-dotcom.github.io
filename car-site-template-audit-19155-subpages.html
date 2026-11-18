@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Twenty-Eight Pages, Three Hundred Fifty-Six Words, Forty Different Cars</title>
+<meta name="description" content="3,831 model years, five sub-pages each, 240 pages fetched: the two templates whose length never moves, the 200-word breadcrumb block that hid it, and the anchor text promising capacity figures no page contains.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 18 November 2026</p>
+<h1>Twenty-Eight Pages, Three Hundred Fifty-Six Words, Forty Different Cars</h1>
+<p>A word count should not be able to identify a page template. On our car site it can.</p>
+<p>I took forty model-year pages, stripped their markup, and counted words. Twenty-eight of them came out at exactly 356. Different brands, different decades, different engines, different everything — same count, to the word.</p>
+<p>That is what a template looks like when the data underneath it has stopped arriving.</p>
+<h2>The tree</h2>
+<p>96 sitemap files. 24,333 URLs. Ninety-four percent of them belong to one structure: brand → model → year → five children.</p>
+<table><thead><tr><th>Depth</th><th>URLs</th><th>Contents</th></tr></thead><tbody><tr><td>1</td><td>103</td><td>home, brand index, OBD index, legal</td></tr><tr><td>2</td><td>1,213</td><td>brand and model roots</td></tr><tr><td>3</td><td>3,862</td><td>model years (3,831 with a four-digit year)</td></tr><tr><td>4</td><td>19,155</td><td>5 × 3,831 sub-pages</td></tr></tbody></table>
+<p>The five children are specs, safety, maintenance, owner's manual, problems. Every model year gets all five. There is no gate that asks whether there is anything to say.</p>
+<h2>Procedure</h2>
+<p>Forty model-year URLs, fixed stride through the sorted list, brands spread across the alphabet rather than stacked on the popular ones. Six requests per vehicle, 240 in total, sequential, 200 on every one.</p>
+<p>Each page was reduced to its <code>&lt;main&gt;</code> block, tags stripped, inline JSON-LD removed, whitespace collapsed. Then 5-grams, and pairwise Jaccard within each page type — 780 pairs per type — plus word counts and table-row counts.</p>
+<p>The JSON-LD removal was not cosmetic. See below.</p>
+<table><thead><tr><th>Page type</th><th>Mean words</th><th>Most common exact length</th><th>Mean similarity across vehicles</th></tr></thead><tbody><tr><td>Model year</td><td>686</td><td>699 (4 of 40)</td><td>35.7%</td></tr><tr><td>specs</td><td>386</td><td>361 (2 of 40)</td><td>33.0%</td></tr><tr><td>safety</td><td>362</td><td><strong>356 (28 of 40)</strong></td><td><strong>73.0%</strong></td></tr><tr><td>maintenance</td><td>565</td><td>573 (3 of 40)</td><td>47.2%</td></tr><tr><td>owner's manual</td><td>326</td><td><strong>321 (29 of 40)</strong></td><td><strong>59.7%</strong></td></tr><tr><td>problems</td><td>834</td><td>313 (3 of 40)</td><td>20.0%</td></tr></tbody></table>
+<h2>Three things worth the space</h2>
+<h3>The "multiplied pages are just excerpts" theory failed.</h3>
+<p>I expected the children to be slices of the parent served again to fatten the index. Overlap says otherwise: 1.4% for safety pages against their parent, 2.1% problems, 2.9% maintenance, 5.4% specs, 6.9% owner's manual. Under a twentieth.</p>
+<p>Nineteen thousand pages, and they are not the parent repeated. That is the finding I did not expect and the one that made the rest of the audit worth running — the cheapest explanation was the wrong one.</p>
+<h3>A 200-word breadcrumb block was hiding the duplication.</h3>
+<p>The first count included JSON-LD sitting inside <code>&lt;main&gt;</code>: breadcrumb schema, a couple hundred words of URLs, unique per page. Safety pages came out at 568 words on that pass.</p>
+<p>Clean, they are 356 — and 28 of 40 land on the same number. The schema was doing what schema does, describing each page precisely, and in doing so it made 40 identical bodies look like 40 distinct lengths.</p>
+<p>If you audit templated pages and skip the script-stripping step, you will measure your breadcrumbs and conclude you have variety.</p>
+<h3>The label promises a number that no page contains.</h3>
+<table><thead><tr><th>Check</th><th>Result</th></tr></thead><tbody><tr><td>Parent pages whose link text says "…fluid capacities"</td><td>40 / 40</td></tr><tr><td>Pages of 240 with any quarts or litres figure</td><td><strong>0</strong></td></tr><tr><td>Parent pages with an explicit "empty on purpose" note</td><td>40 / 40</td></tr><tr><td>Safety pages with an NCAP table</td><td>1 / 40</td></tr><tr><td>Owner's manual pages linking the manufacturer</td><td>40 / 40</td></tr><tr><td>Problems pages with at least one recall</td><td>34 / 40</td></tr></tbody></table>
+<p>Every parent page says, in plain words, that fluid capacities and torque figures are unverified and deliberately blank. I think that's right. Guessing a torque value is worse than admitting you don't have one.</p>
+<p>But the link above that paragraph still reads "maintenance schedule and fluid capacities", and it still lands on a page with neither. The disclosure is honest and the anchor is not, and the anchor is what people click.</p>
+<h2>What this cannot settle</h2>
+<p>No NHTSA API call, so a genuinely untested vehicle and a broken data join look identical here. Thirty-nine of forty pages without a rating is compatible with either.</p>
+<p>No crawl or impression data either, so I can say 73% similarity and I cannot say what that costs. Those are different claims and only the first one is mine.</p>
+<p>The problems pages vary from 313 to 2,113 words because recall counts vary by vehicle. It is the only child type whose size follows its data. If one of the five is worth keeping as-is, my guess is that one — a guess, not a measurement.</p>
+<h2>Disclosure</h2>
+<p><a href="https://carspecdata.com/">carspecdata.com</a> is our site. Specs, EPA fuel economy, NHTSA recalls, manufacturer manual links, source named on every page. The 240 requests were sequential, from Luoyang, over about twenty minutes.</p>
+<h2>Growth</h2>
+<p>Six days ago the ledger said 3,198 model-year pages. Today 3,831. Six hundred thirty-three in six days, five children each.</p>
+<p>The templates that don't change are the ones multiplying fastest. That's the part I'd fix first, and it's the part that gets more expensive to fix every week.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 18 November 2026.</footer>
+</div>
+</body>
+</html>

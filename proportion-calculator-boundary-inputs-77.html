@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exact to 30 Digits, Wrong at the Eighth</title>
+<meta name="description" content="Seventy-seven inputs through the shared math module behind two calculators: negatives, zero denominators, mixed numbers, and the two lines where the exact answer gets a rounded label.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 18 November 2026</p>
+<h1>Exact to 30 Digits, Wrong at the Eighth</h1>
+<p>Two numbers were wrong out of seventy-seven, and both of them were in the fine print.</p>
+<p>That is the short version of a week I spent trying to break my own calculator and mostly failing. I fed it negative ratios, zero denominators, mixed numbers, a decimal thirty digits long. It handled all of it. Then it printed a zero where the answer was one billionth, and I had to sit with that for a minute.</p>
+<h2>The setup</h2>
+<p>The proportion calculator is a static page. Every calculation runs in the browser through one ES module — 264 lines, BigInt fractions, shared with the slope calculator on the other site. No API, no server round trip, nothing to mock.</p>
+<p>Seventy-seven inputs, five modes, run under Node 22.22.0. Then I wrote the expected answers a second time in Python using <code>fractions.Fraction</code>, deliberately from the spec rather than from the JavaScript, and compared the two as exact rationals. Floats would have hidden the failures I was hunting.</p>
+<table><thead><tr><th>Mode</th><th>Inputs</th><th>Correct</th><th>Wrong</th></tr></thead><tbody><tr><td>Number parsing</td><td>14</td><td>12</td><td>0</td></tr><tr><td>Proportion, solve and check</td><td>20</td><td>20</td><td>0</td></tr><tr><td>Splitting a total in a ratio</td><td>10</td><td>10</td><td>0</td></tr><tr><td>Scaling</td><td>6</td><td>6</td><td>0</td></tr><tr><td>Slope, all three entry modes</td><td>18</td><td>18</td><td>0</td></tr><tr><td>Extreme magnitudes</td><td>9</td><td>7</td><td><strong>2</strong></td></tr><tr><td>Total</td><td>77</td><td>75</td><td><strong>2</strong></td></tr></tbody></table>
+<p>The two refusals in the first row are their own small story. <code>1,000</code> is rejected — no comma in the grammar. A 33-character decimal is rejected too, because the parser stops at 32.</p>
+<h2>What the two failures have in common</h2>
+<p>Both are printing problems, and both sit directly under a correct answer that the same page already computed.</p>
+<p><code>1/1000000000</code> returns <code>c = 1/1000000000</code> and then adds: decimal preview ≈ <strong>0</strong>. Not a rounded billionth. Plain zero.</p>
+<p><code>1000000000000000000000000000000 / 7</code> returns the exact fraction, then previews <code>142857142857142850000000000000</code>. The true expansion is 142857142857142857142857142857. Seventeen correct digits, thirteen zeros that belong to nobody, error of roughly seven trillion.</p>
+<p>The culprit is two lines at the bottom of the rational class, where the value is turned back into a JavaScript double for display. The arithmetic never goes near a double. Everything above those two lines is exact; everything below them is approximate and labelled as if it were a courtesy.</p>
+<h2>The part that behaved better than I expected</h2>
+<table><thead><tr><th>Input</th><th>Printed</th><th>Correct</th></tr></thead><tbody><tr><td>3/4 = 6/8</td><td>The ratios match.</td><td>yes</td></tr><tr><td>0/4 = 0/9</td><td>The ratios match.</td><td>yes</td></tr><tr><td>5/□ = 0/9</td><td>No solution.</td><td>yes</td></tr><tr><td>0/□ = 5/9</td><td>No solution.</td><td>yes</td></tr><tr><td>-3/4 = □/20</td><td>-15</td><td>yes</td></tr><tr><td>3/-4 = □/20</td><td>-15</td><td>yes</td></tr><tr><td>-3/-4 = □/20</td><td>15</td><td>yes</td></tr><tr><td>100 split 3 : 2</td><td>60 and 40</td><td>yes</td></tr><tr><td>-100 split 3 : 2</td><td>-60 and -40</td><td>yes</td></tr><tr><td>2 scaled from a base of -4 to 6</td><td>-3, factor -3/2</td><td>yes</td></tr><tr><td>2x + 3y = 6</td><td>slope -2/3, y = (-2/3)x + 2</td><td>yes</td></tr><tr><td>rise 1, run 12</td><td>8.33%, 4.76°, ratio 1 : 12</td><td>yes</td></tr></tbody></table>
+<p>This is usually the graveyard. Zero denominators are where a calculator divides by zero and prints Infinity into a box a student will copy into homework. Here the page stops and says the question has no answer, which is the mathematically correct thing to say and the harder thing to code.</p>
+<p>Negatives, fractions as inputs, mixed numbers as inputs, a decimal point at the front or the back — all fine. The input grammar is more forgiving than the label on the box suggests.</p>
+<h2>Boundary of this test</h2>
+<p>Module only. The browser UI, the SVG plot, the draggable points and the copy button were not exercised, so nothing here says the page wires the module up correctly.</p>
+<p>No traffic data either. I can't tell you how often a visitor meets those magnitudes, and inventing a frequency would be the same sin as the fake zeros — a number that looks like evidence and isn't.</p>
+<p>Eight-decimal rounding is also not the bug. <code>1/7</code> previewing as <code>0.14285714</code> is correct and the text says "up to 8 decimal places". The bug is that the preview is derived from a float, so at both extremes it stops being a rounding of the right value.</p>
+<h2>Disclosure</h2>
+<p><a href="https://proportioncalculatoronline.com/">proportioncalculatoronline.com</a> is our own site: a free proportion calculator that shows the cross-multiplication steps. We audit it in public because the alternative is finding out from a comment.</p>
+<h2>Open thread</h2>
+<p>The repair is unglamorous. Derive the preview from the numerator and denominator directly, and when the true value is smaller than the smallest digit on offer, print nothing instead of a zero.</p>
+<p>Everything else in the module earned my trust this week. The line under the answer has not.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 18 November 2026.</footer>
+</div>
+</body>
+</html>

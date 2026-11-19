@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Twenty-Six Pages About Error Codes, None in the Sitemap</title>
+<meta name="description" content="11,268 sitemap URLs parsed, 144 code URLs probed, 26 problems pages sampled: the error-code directory that 404s, 1,699 model pages with nothing underneath, and the codes already written under the wrong name.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 19 November 2026</p>
+<h1>Twenty-Six Pages About Error Codes, None in the Sitemap</h1>
+<p>The URL was the only thing missing.</p>
+<p>This site indexes appliance model numbers — roughly 3,700 machines across eight categories, with a page each for the manual, the specs, the parts list and the known problems.</p>
+<p>The problems page is the one people arrive from search on. "Maytag MVWB965H problems" is a real query. So is "Maytag MVWB965H error code F5E2". We answer the first. The second one we answer too, on a page under <code>/error-codes/</code> — except the directory above it returns 404 and nothing in the sitemap mentions it.</p>
+<h2>The census</h2>
+<p>Two sitemaps, 1,668 and 9,600 URLs, no overlap, 11,268 unique.</p>
+<table><thead><tr><th>Layer</th><th>URLs</th></tr></thead><tbody><tr><td>home</td><td>1</td></tr><tr><td>single-segment</td><td>9</td></tr><tr><td>brand → category</td><td>820</td></tr><tr><td>brand → category → model</td><td>3,741</td></tr><tr><td>model sub-pages</td><td>6,697</td></tr></tbody></table>
+<p>The sub-pages split into parts 2,042, manual 1,551, problems 1,551, specs 1,551, error-codes 2.</p>
+<p>Three types at exactly 1,551 is a batch boundary, not a decision. Parts overshoots it by 491 models, which is what you see when one generator kept running after another stopped.</p>
+<h2>What's actually broken</h2>
+<p><strong>26 code pages exist, 0 are declared.</strong> Maytag 13, Whirlpool 13, every one returning 200, every one about 450 words: what you will see, likely causes in order, safe checks, when to call a technician, which other models show it. Real pages. Invisible to a crawler reading the sitemap, and the index at <code>/error-codes/</code> returns 404 — so trimming a deep URL to its parent dead-ends.</p>
+<p><strong>The content is already written under another name.</strong> <code>/maytag/washing-machines/mhw6630h/problems/</code> has a ten-row fault-code table. <code>/maytag/washing-machines/mhw6630h/error-codes/</code> is 404. Three Maytag washers carry codes; two got the URL.</p>
+<p><strong>45.4% of model pages have nothing under them.</strong> 1,699 dead ends out of 3,741. Room AC, freezers, range hoods and dehumidifiers get zero sub-pages entirely — 100 models. Refrigerators leave 1,059 of 2,013 without a child page.</p>
+<h2>How far off this could be</h2>
+<p>I have no Search Console here, so I can't claim those 26 pages are unindexed. Internal links exist; brand hubs pass them twice. The honest version is "not declared, and the index 404s."</p>
+<p>I checked 26 of 1,551 problems pages, 1.7%. And I verified no code meaning against a service manual — the F5E2 page is specific and confident, which is also how a wrong page sounds.</p>
+<h2>Correction</h2>
+<p>My first pass at the table returned <code>F6E2F6E3</code> as a single code and I logged it as a rendering defect. The cell is a link plus a subtitle div: <code>F6E2</code> the code, <code>F6E3</code> its alias. My tag stripper joined them with nothing between. The page was correct. I was not.</p>
+<p>*Disclosure: this is our own site. The numbers come from crawling it on 19 November 2026. The 404 is at <code>/error-codes/</code>.*</p>
+<p>A route, a sitemap line, one template applied to a third model. Small. Invisible. And the kind of thing that only surfaces when someone types a URL instead of clicking one.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 19 November 2026.</footer>
+</div>
+</body>
+</html>

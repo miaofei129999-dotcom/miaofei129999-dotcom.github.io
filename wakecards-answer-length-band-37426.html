@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sixty-One Words a Card, and No Setting That Says So</title>
+<meta name="description" content="37,426 flashcards parsed out of 174 deck pages: zero truncated answers, no pile-up at a maximum, and a length band produced by sentence count times the source book's own sentence length.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 19 November 2026</p>
+<h1>Sixty-One Words a Card, and No Setting That Says So</h1>
+<p>The most useful thing about this audit is that it destroyed a number I had been quoting for a week.</p>
+<p>We publish flashcard decks built from public-domain books. A reader asked whether the answers are capped, because they all look the same length on screen. I went looking for the cap. There isn't one. What there is, is a sentence limit and a library full of books written in short lines.</p>
+<h2>Method</h2>
+<p>Deck pages embed the full deck as <code>window.BC_CARDS</code>. Regex, <code>json.loads</code>, no browser.</p>
+<p>217 sitemap URLs → 174 decks → 37,426 cards → 10,050 chapter buckets. Four threads, 67 seconds, one parse failure from an escaped quote in the inline JSON. Words counted by token regex, sentences split with an abbreviation guard.</p>
+<p>Prior run for comparison: 13 November, 34,500 cards on 156 decks. The gap is +2,926 cards, +18 decks, +60 sitemap URLs.</p>
+<h2>Distribution</h2>
+<table><thead><tr><th>Words per answer</th><th>Cards</th></tr></thead><tbody><tr><td>under 30</td><td>15</td></tr><tr><td>30–39</td><td>268</td></tr><tr><td>40–49</td><td>2,611</td></tr><tr><td>50–59</td><td>13,027</td></tr><tr><td>60–69</td><td>16,261</td></tr><tr><td>70–79</td><td>4,687</td></tr><tr><td>80–89</td><td>499</td></tr><tr><td>90–99</td><td>48</td></tr><tr><td>100+</td><td>10</td></tr></tbody></table>
+<p>Mean 60.93. σ 8.25. Median 61. Min 25. Max 109.</p>
+<h2>Findings</h2>
+<p><strong>No answer is cut off.</strong> 36,949 end with a full stop, 461 with a closing quote, 14 with a question mark, 2 with an exclamation mark. Zero end mid-sentence. The maximum value appears once. If a hard cap existed you would see a stack of cards at that number, all incomplete. There is no stack.</p>
+<p><strong>Sentences are what's fixed.</strong> 14,722 answers are two sentences, 17,731 are three. That's 86.7%. Length is product, not target.</p>
+<table><thead><tr><th>Deck</th><th>Words</th><th>Sentences</th><th>Words/sentence</th></tr></thead><tbody><tr><td>Meditations</td><td>40.88</td><td>2.68</td><td>16.19</td></tr><tr><td>The Art of War</td><td>43.29</td><td>2.79</td><td>16.27</td></tr><tr><td>The Prince</td><td>46.41</td><td>2.62</td><td>18.49</td></tr><tr><td>Tao Te Ching</td><td>50.12</td><td>2.51</td><td>21.05</td></tr><tr><td>Discourses on Livy</td><td>59.09</td><td>2.51</td><td>25.06</td></tr></tbody></table>
+<p><strong>The short decks are the aphoristic ones.</strong> Meditations, Art of War, Prince, Tao Te Ching, Enchiridion — five books built from one-paragraph fragments, five shortest decks, ranked in the same order as their sentence density. Site average is 24.50 words per sentence; Meditations is 16.19.</p>
+<p>Deck size doesn't explain it (correlation 0.04). Question length doesn't (0.05). What differs is how the source writes.</p>
+<h2>Boundary</h2>
+<p>The payload carries no source text, so I can't separate "the book writes short sentences" from "that deck was configured to write short sentences." Both look identical from outside. And nothing here is a check on accuracy — I did not verify a single answer against its book.</p>
+<h2>Retraction</h2>
+<p>On 13 November this site said the answers "sit in a 60-word band, which suggests a 60-word target." That line is wrong and it's off the site. The band is what three sentences of average density produces.</p>
+<p>*Disclosure: this is our own site, and the cards are public. The crawl ran on 19 November 2026.*</p>
+<p>The assumption I'd held — that uniform output means a uniform constraint — turned out to be the expensive kind of wrong. Uniform output can also mean a uniform structure over varied material.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 19 November 2026.</footer>
+</div>
+</body>
+</html>

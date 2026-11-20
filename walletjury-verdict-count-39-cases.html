@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sixteen Convictions, One Tie, No Acquittals</title>
+<meta name="description" content="39 cases, 46 ballots, 16 guilty verdicts, 1 hung jury, 0 acquittals. Every voted case was already marked guilty by the model, and the three it cleared never got a vote.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 20 November 2026</p>
+<h1>Sixteen Convictions, One Tie, No Acquittals</h1>
+<p>A voting product with three possible verdicts has produced only two of them. In 39 cases.</p>
+<p>I pulled the whole record in one request on 20 November 2026 and counted verdicts instead of votes. The gap between the two counts is the story.</p>
+<h2>The pull</h2>
+<p>One GET to the public feed endpoint, no login. It returns every case with its ballot counters attached: <code>g</code> for guilty, <code>a</code> for not guilty. Each object also carries the model's own pre-loaded verdict as <code>ai.lean</code>.</p>
+<table><thead><tr><th></th><th>Count</th></tr></thead><tbody><tr><td>Cases</td><td>39</td></tr><tr><td>Cases with a ballot</td><td>17</td></tr><tr><td>Cases with none</td><td>22</td></tr><tr><td>Ballots cast</td><td>46</td></tr><tr><td>Guilty ballots</td><td>33</td></tr><tr><td>Not-guilty ballots</td><td>13</td></tr><tr><td>Guilty verdicts</td><td>16</td></tr><tr><td>Hung jury</td><td>1</td></tr><tr><td>Not-guilty verdicts</td><td>0</td></tr></tbody></table>
+<p>Twelve cases sit at 2–1, four at 2–0, one at 1–1. No case has ever reached four ballots, and 22 have never reached one.</p>
+<h2>What the AI field decides</h2>
+<p><code>ai.lean</code> splits 36 guilty to 3 not guilty.</p>
+<p>All seventeen cases that received a ballot were ones the model had already marked guilty. The three it cleared got no votes at all — a $139.95 Birkenstock, a $399 Apple Watch, a pair of Lululemon leggings at $98.</p>
+<p>The community didn't agree with the machine sixteen times. It was never shown the three cases where the machine was unsure. Three is not a sample and I won't compute a rate from it, but the narrower statement holds: the only records where an acquittal could have happened are the only records that were never put to a vote.</p>
+<h2>The acquittal labels contradict their own text</h2>
+<p>The three <code>not_guilty</code> cases are the only three opinion strings on the site that open with "Buy":</p>
+<ul><li>"Buy, but $140 for 'my feet'? Spoiled feet, perhaps?"</li><li>"Buy, but don't pretend it's just for running"</li><li>"Buy, but honestly, three pairs of Aligns?"</li></ul>
+<p>Every one of the 36 guilty labels opens with a price or a sceptical clause instead. So on 3 of 3 records where the label carries the verdict, the label and the sentence underneath it point in opposite directions. That's 7.7% of the dataset and 100% of the cases where it matters.</p>
+<h2>Seventeen threes</h2>
+<p>51 replies across 39 cases: 22 with zero, 17 with exactly three.</p>
+<p>Nothing has one. Nothing has four. Seventeen cases, seventeen identical counts, zero variance. Real comment threads have a long tail — most posts get nothing, one gets forty. A fixed count of three on exactly the subset that also carries ballots is generated, not grown.</p>
+<p>The reply objects carry a <code>source</code> label (facebook, reddit, instagram, x) and resolve to thirteen distinct handles. All 39 cases are anonymous; <code>authorName</code> is empty on every single one. I have no ballot timestamps and no voter identity, so I won't call them bots. I'll say a constant isn't a community.</p>
+<h2>Two smaller things</h2>
+<p><code>outcome</code> is null on 39 of 39. The verdict on screen is computed in the browser from <code>g</code> vs <code>a</code> on every page load and never written back, so a case decided a month ago is still undecided in the database.</p>
+<p>Newest case: 23 October, 21:08. That's 28 days of nothing. Before that, three a day at 21:0x starting 15 October. A pipeline that stops doesn't announce itself — a site with no new cases and no errors looks exactly like a site with no visitors.</p>
+<h2>A correction to my own earlier audit</h2>
+<p>I previously concluded that the affordability dropdown was deciding these cases, because picking "It's a stretch" seemed to produce a guilty verdict almost every time.</p>
+<p>That was wrong. Nothing was deciding anything — all 17 voted cases closed guilty. The two "Easily" cases among them, a $159.99 Kindle and a $45 tumbler, also closed guilty. The dropdown wasn't sorting outcomes. It was sorting which individual ballots came back not guilty, 13 of them, every one of which was outvoted.</p>
+<p>Disclosure: WalletJury is one of our own sites, and this is a self-audit of its open feed, which needs no account — https://walletjury.com/</p>
+<hr>
+<p>Count your verdicts by type before you count your votes. A 33–13 ballot split and a 16–1–0 verdict split are two different products, and only one of them is what the homepage promises.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 20 November 2026.</footer>
+</div>
+</body>
+</html>

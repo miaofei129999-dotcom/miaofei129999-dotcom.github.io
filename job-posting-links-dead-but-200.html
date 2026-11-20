@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Two of Six Job Links Are Dead, and Both Answer 200</title>
+<meta name="description" content="Six job links re-checked after fourteen days: two are closed, both return HTTP 200. Plus 2,435 live roles pulled from eight ATS boards to test the posting-lifespan claim.">
+<style>
+body{margin:0;background:#fbfaf7;color:#22201d;font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:48px 22px 96px}
+h1{font-size:1.7rem;line-height:1.28;margin:0 0 6px}
+h2{font-size:1.05rem;margin:34px 0 8px}
+p{margin:14px 0}
+ul{padding-left:20px}
+ol{padding-left:22px}
+li{margin:10px 0}
+a{color:#1a4f8a}
+a:hover{text-decoration:underline}
+.meta{color:#7c756c;font-size:.86rem;margin:0 0 26px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.94rem}
+th,td{border-bottom:1px solid #e7e3dc;padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600}
+blockquote{margin:18px 0;padding:2px 0 2px 14px;border-left:3px solid #d8d2c8;color:#4a453e}
+code{background:#f1eee8;padding:1px 4px;border-radius:3px;font-size:.9em}
+pre{background:#f1eee8;padding:12px 14px;border-radius:6px;overflow:auto;font-size:.86rem}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid #e7e3dc;color:#8d867d;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="meta">Trend Watch Notes · 20 November 2026</p>
+<h1>Two of Six Job Links Are Dead, and Both Answer 200</h1>
+<p>A careers page can look completely healthy and be a tombstone. I found two this morning while re-checking six job links that a page about posting lifetimes had published as verifiable examples.</p>
+<p>Neither returned an error. Both returned 200.</p>
+<h2>The six rows, re-opened on 20 November</h2>
+<p>The page in question is about how long job postings stay up. It lists six roles with first-published dates and says all six still opened on 6 November 2026. It was updated on the 15th.</p>
+<table><thead><tr><th>Company</th><th>Role</th><th>First published</th><th>Days live on 28 Oct</th><th>Status now</th></tr></thead><tbody><tr><td>Stripe</td><td>Managing Editor, Stripe Press</td><td>27 Oct 2026</td><td>0.5</td><td>dead: "Role no longer open"</td></tr><tr><td>GitLab</td><td>Manager, Customer Success</td><td>17 Oct 2026</td><td>11</td><td>dead: lands on the board's error state</td></tr><tr><td>Datadog</td><td>Senior Sales Engineer, AI Accounts</td><td>29 Sep 2026</td><td>29</td><td>live</td></tr><tr><td>Cloudflare</td><td>Senior Majors Account Executive, Chicago</td><td>31 Jul 2026</td><td>89</td><td>live</td></tr><tr><td>Supabase</td><td>Multigres Deployment Engineer</td><td>15 Apr 2026</td><td>196</td><td>live</td></tr><tr><td>Ashby</td><td>Engineering Manager, EU</td><td>4 Mar 2024</td><td>968</td><td>live</td></tr></tbody></table>
+<p>Both dead links serve full pages with success status. Stripe's 148 KB response contains the words "no longer accepting applications". GitLab's 77 KB response redirects to <code>job-boards.greenhouse.io/gitlab?error=true</code>, which is the board telling you the requisition is gone.</p>
+<h2>Why a link checker can't see this</h2>
+<p>I ran one first. Eleven of eleven links came back 200 and I wrote down "citations healthy" before reading a single page body. That was wrong, and it's the whole reason this post exists.</p>
+<p>Greenhouse and Stripe don't 404 a closed posting. They serve the shell and swap the content. Every automated outbound-link audit on the market will score these as fine, forever, because none of them read the body.</p>
+<h2>What I re-pulled independently</h2>
+<p>The same page claims 3,272 live postings across 16 boards, median 49 days on Greenhouse and 64 on Ashby. Sixteen boards aren't named, so that population isn't reproducible. I pulled eight I could identify from the ATS vendors' public endpoints.</p>
+<table><thead><tr><th>Board</th><th>ATS</th><th>Live roles</th><th>Median age</th><th>Over 30 days</th></tr></thead><tbody><tr><td>Cloudflare</td><td>Greenhouse</td><td>497</td><td>52</td><td>67.0%</td></tr><tr><td>Datadog</td><td>Greenhouse</td><td>382</td><td>80</td><td>79.1%</td></tr><tr><td>GitLab</td><td>Greenhouse</td><td>246</td><td>34</td><td>52.4%</td></tr><tr><td>Stripe</td><td>Greenhouse</td><td>773</td><td>52</td><td>66.4%</td></tr><tr><td>Ashby</td><td>Ashby</td><td>79</td><td>72</td><td>58.2%</td></tr><tr><td>Ramp</td><td>Ashby</td><td>185</td><td>50</td><td>61.1%</td></tr><tr><td>Sierra</td><td>Ashby</td><td>194</td><td>80</td><td>73.7%</td></tr><tr><td>Supabase</td><td>Ashby</td><td>79</td><td>37</td><td>54.4%</td></tr></tbody></table>
+<p>2,435 roles. 67.3% of the Greenhouse set is more than a month old, against the page's 68%. Different day, different subset, same shape — the "postings last one to two weeks" advice is simply wrong, and that part of the page holds up.</p>
+<h2>Three things that didn't go the way I expected</h2>
+<p>The two dead roles were the two youngest. Half a day old and eleven days old when the numbers were pulled. The survivors were 29, 89, 196 and 968 days old. Older did not mean deader; it meant the req was still genuinely open.</p>
+<p>A 200 is the normal way a job link dies. Not a 404, not a redirect home, not an empty body. Greenhouse hands back a styled error state, Stripe hands back a full careers page with a notice where the role used to be. Both are correct product decisions and both defeat every automated check.</p>
+<p>One role has been listed for 968 days. Engineering Manager, EU at Ashby, first published March 2024. Fifteen of the 79 roles on that board are over 30 days old. A posting's age describes how long a door has been open, and says nothing at all about whether anyone is walking through it.</p>
+<h2>What I can't tell you</h2>
+<p>When Stripe's role closed. It was alive on 6 November and dead on 20 November, which brackets it somewhere between day 10 and day 24 after publication. That's a six-day window and narrowing it needs daily polling.</p>
+<p>I also can't reproduce the 3,272 total. Postings that closed between 28 October and today are gone from the API, so a surviving-set median is biased downward by construction. Comparing my survivors to their full set and calling the difference a finding would be dishonest arithmetic.</p>
+<p>Disclosure: JobRadarly is one of our own sites, and both dead links are still on the page as of publication. Everything above came from its own HTML and from public ATS endpoints — https://jobradarly.com/</p>
+<hr>
+<p>Pick six outbound links on your site and read the text on the other side, not the status code. The 200s that say "no longer open" are the ones nobody has looked at.</p>
+<footer>Trend Watch Notes publishes its own coverage audits. Numbers here were produced by crawling our own sites on 20 November 2026.</footer>
+</div>
+</body>
+</html>
